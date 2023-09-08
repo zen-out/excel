@@ -1,4 +1,3 @@
-const reader = require("xlsx");
 const _ = require("lodash");
 const { HK_FILE, BD_FILE, days } = require("./VARIABLES.js");
 const {
@@ -6,19 +5,21 @@ const {
   createFile,
   reassignKeys,
 } = require("./javascript/helper.js");
+const { eachBD } = require("./javascript/methods.js");
+// Will assign to airship
 
-const hkFile = reader.readFile(`./data/${HK_FILE}`);
-const bdFile = reader.readFile(`./data/${BD_FILE}`);
+const hkFile = readFile(`./data/${HK_FILE}`);
+const bdFile = readFile(`./data/${BD_FILE}`);
+// console.log(hkFile);
 
-console.log(readFile(hkFile));
+let reassignedHK = reassignKeys(hkFile, "hk");
+// console.log(reassignedHK);
+let reassignedBD = reassignKeys(bdFile, "bd");
+// console.log(reassignedBD);
 
-let hkData = readFile(hkFile);
-let bdData = readFile(bdFile);
-console.log(reassignKeys(hkData));
-// console.log(reassignKeys(hkData));
-
-// console.log(hkData);
-// console.log(bdData);
-
-// let hkResult = _.map(hkData, (item) => _.pick(item, "a"));
-// let bdResult = _.map(bdData, (item) => _.pick(item, "a"));
+function testOne() {
+  let filterHK = _.filter(reassignedHK, { materialNo: materialNo });
+  let filterBD = _.filter(reassignedBD, { materialNo: materialNo });
+  let getItem = eachItem(filterHK, filterBD, "TAC11179670");
+}
+// testOne();

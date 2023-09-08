@@ -1,18 +1,21 @@
 const _ = require("lodash");
 const reader = require("xlsx");
-const { days, OUTPUT_FILE } = require("../VARIABLES.JS");
+const { DAYS_TO_ADD, OUTPUT_FILE } = require("../VARIABLES.JS");
 function readFile(file) {
-  let data = [];
-  const sheets = file.SheetNames;
+  let returnData = [];
+  const data = reader.readFile(file);
+  let sheets = data.SheetNames;
+  console.log(data);
   for (let i = 0; i < sheets.length; i++) {
-    const temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[i]], {
+    console.log(sheets[i]);
+    const temp = reader.utils.sheet_to_json(data.Sheets[sheets[i]], {
       defval: "",
     });
     temp.forEach((res) => {
-      data.push(res);
+      returnData.push(res);
     });
   }
-  return data;
+  return returnData;
 }
 
 function createFile(data) {
@@ -26,9 +29,31 @@ function createFile(data) {
   reader.writeFile(workbook, OUTPUT_FILE);
 }
 
-function getNextWednesday(date) {
-  let resultDate = new Date(date.getTime());
-  resultDate.setDate(date.getDate() + ((3 - 1 - date.getDay() + 7) % 7) + 1);
+function convertToDate(stringOrNum) {
+  let returnDate;
+  if (typeof stringOrNum === "string") {
+    returnDate = new Date(stringOrNum.trim());
+  } else if (typeof stringOrNum === "number") {
+    const excelEpoch = new Date(1899, 11, 31);
+    const excelEpochAsUnixTimestamp = excelEpoch.getTime();
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+    returnDate = new Date(
+      excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
+    );
+  } else {
+    returnDate = null;
+  }
+  let resultDate = new Date(returnDate.getTime());
+  resultDate.setDate(returnDate.getDate() + 1);
+  return resultDate;
+}
+
+function getNextWedAndDays(currDate) {
+  let resultDate = new Date(currDate.getTime());
+  resultDate.setDate(
+    currDate.getDate() + ((3 - 1 - currDate.getDay() + 7) % 7) + 1
+  );
+  resultDate.setDate(resultDate.getDate() + DAYS_TO_ADD);
   return resultDate;
 }
 function getWeight(descriptionString) {
@@ -53,21 +78,61 @@ function getLetterPosition(letter) {
   let value = result - 1;
   return value;
 }
-function reassignKeys(data) {
-  const oldKeys = [
-    getLetterPosition("A"),
-    getLetterPosition("B"),
-    getLetterPosition("C"),
-    getLetterPosition("D"),
-    getLetterPosition("E"),
-  ];
-  const newKeys = ["item", "description", "qty", "airOrShip", "remarks"];
-
+function reassignKeys(data, type) {
+  let oldKeys;
+  let newKeys;
+  if (type == "hk") {
+    oldKeys = [
+      getLetterPosition("A"),
+      getLetterPosition("B"),
+      getLetterPosition("C"),
+      getLetterPosition("D"),
+      getLetterPosition("E"),
+    ];
+    newKeys = ["materialNo", "description", "qty", "airOrShip", "remarks"];
+  } else {
+    oldKeys = [
+      getLetterPosition("A"),
+      getLetterPosition("B"),
+      getLetterPosition("C"),
+      getLetterPosition("D"),
+      getLetterPosition("E"),
+      getLetterPosition("F"),
+    ];
+    newKeys = [
+      "dateOfIssue",
+      "materialNo",
+      "owedQty",
+      "allocateInTransit",
+      "assignMaxInTransit",
+      "materialShortageAfterInventory",
+    ];
+  }
   let result = data.map((obj) => {
     let newObj = {};
     let keys = Object.keys(obj);
 
     keys.forEach((key, index) => {
+      if (key.toLowerCase().includes("item description")) {
+        let kg = getWeight(obj[key]);
+        newObj["kg"] = kg;
+      }
+
+      if (key.toLowerCase().includes("date of issue")) {
+        let dateOfIssue = convertToDate(obj[key]);
+        obj[key] = dateOfIssue;
+        let beforeOrAfter = getNextWedAndDays(new Date("2023-09-01"));
+        if (beforeOrAfter > dateOfIssue) {
+          newObj["before"] = true;
+        } else {
+          newObj["before"] = false;
+        }
+      }
+      if (key.toLowerCase().includes("assign maximum in transit")) {
+        let assignMax = convertToDate(obj[key]);
+        obj[key] = assignMax;
+      }
+
       let keyIndex = oldKeys.indexOf(index);
       if (keyIndex > -1) {
         // If it's one of the keys to be changed, use the new key
@@ -80,7 +145,6 @@ function reassignKeys(data) {
 
     return newObj;
   });
-  console.log(result);
   return result;
 }
 
@@ -88,6 +152,6 @@ module.exports = {
   reassignKeys,
   readFile,
   createFile,
-  getNextWednesday,
+  convertToDate,
   getWeight,
 };
