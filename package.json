@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "xlsx": "^0.18.5"
+  },
+  "name": "mazen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zen-out/mazen.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zen-out/mazen/issues"
+  },
+  "homepage": "https://github.com/zen-out/mazen#readme",
+  "description": ""
+}

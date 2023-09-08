@@ -1,0 +1,172 @@
+{
+  "ShortcutMenuBar.toggleTerminal": true,
+  "jsdoc.author": "zen-out",
+  "javascript.suggest.completeJSDocs": true,
+  "javascript.suggest.jsdoc.generateReturns": false,
+  "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+  "workbench.preferredLightColorTheme": "monokai-charcoal (purple)",
+  "workbench.preferredDarkColorTheme": "monokai-charcoal (purple)",
+  // "workbench.preferredDarkColorTheme": "Abyss",
+  // "workbench.preferredLightColorTheme": "Abyss",
+  "snippets.useWorkspaceFolder": false,
+  "editor.smoothScrolling": true,
+  // "openInTerminal.app": "Terminal.app", // The name of your terminal app
+  "python.terminal.executeInFileDir": true,
+  "editor.formatOnSave": true,
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "ms-python.black-formatter",
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[py]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  "[jsx]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[handlebars]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[sass]": {
+    "editor.defaultFormatter": "MikeBovenlander.formate"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "MikeBovenlander.formate"
+  },
+  "[html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+  },
+  "editor.suggestSelection": "first",
+  "markdown.preview.breaks": true,
+  "terminal.integrated.fontSize": 14,
+  "editor.fontFamily": "Monaco, quicksand, garamond, monospace, Menlo, tahoma, 'Courier New'",
+  "ShortcutMenuBar.userButton09Command": "esdocMdn.start",
+  "workbench.iconTheme": "portals_icon",
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.editor.revealIfOpen": true,
+  "wallaby.codeLensFeature.runTest": true,
+  "workbench.colorTheme": "monokai-charcoal (purple)",
+  "editor.lineHeight": 1.6,
+  "editor.tabSize": 2,
+  "workbench.tree.indent": 4,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.guides.indentation": false,
+  "editor.guides.bracketPairs": false,
+  "files.exclude": {
+    "**/jsdocs": false,
+    "**/node_modules": false,
+    "*/node_modules": false
+  },
+  "window.zoomLevel": -2,
+  "editor.accessibilitySupport": "on"
+}
+
+
+{
+
+  "workbench.colorTheme": "monokai-charcoal (purple)",
+  "workbench.preferredLightColorTheme": "monokai-charcoal (purple)",
+  "workbench.preferredDarkColorTheme": "Abyss",
+  // "editor.formatOnSave": true,
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // "editor.defaultFormatter": "ms-python.black-formatter",
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
+  },
+  "[jsx]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[handlebars]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[sass]": {
+    "editor.defaultFormatter": "MikeBovenlander.formate"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "MikeBovenlander.formate"
+  },
+  "[html]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[json]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "darkriszty.markdown-table-prettify"
+  },
+  "editor.suggestSelection": "first",
+  "markdown.preview.breaks": true,
+  "terminal.integrated.fontSize": 14,
+  "editor.fontFamily": "Monaco, quicksand, garamond, monospace, Menlo, tahoma, 'Courier New'",
+  "ShortcutMenuBar.userButton09Command": "esdocMdn.start",
+  "workbench.iconTheme": "portals_icon",
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.editor.revealIfOpen": true,
+  "wallaby.codeLensFeature.runTest": true,
+  "editor.lineHeight": 1.6,
+  "editor.tabSize": 2,
+  "workbench.tree.indent": 4,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "editor.wordWrap": "wordWrapColumn",
+  "editor.guides.indentation": false,
+  "editor.guides.bracketPairs": false,
+  "files.exclude": {
+    "**/jsdocs": false,
+    "**/node_modules": false,
+    "*/node_modules": false
+  },
+  "window.zoomLevel": -2,
+  "editor.accessibilitySupport": "on"
+}
