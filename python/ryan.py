@@ -26,7 +26,7 @@ def allocate_material(hkor_row, bdor_df):
     column_name_mapping = {
         "料品號": "Item Number",
         "说明": "Item Description",
-          "f": "f",
+        "f": "f",
         "批次": "By air or ship",
         "數量": "Qty",
         "備註": "Remarks",
@@ -93,7 +93,6 @@ def allocate_material(hkor_row, bdor_df):
 
             bdor_qty_sheets = shortage_qty / weight_per_sheet
             bdor_qty_sheets = math.ceil(bdor_qty_sheets)
-
             hkor_qty_sheets = hkor_row["Qty"] / weight_per_sheet
 
             if bdor_qty_sheets <= hkor_qty_sheets:

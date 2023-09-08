@@ -1,31 +1,44 @@
 const _ = require("lodash");
 const reader = require("xlsx");
-const { DAYS_TO_ADD, OUTPUT_FILE, WEIGHT_TO_ADD } = require("../VARIABLES.JS");
+const fs = require("fs");
+const {
+  DAYS_TO_ADD,
+  OUTPUT_FILE,
+  WEIGHT_TO_ADD,
+  TEMPLATE_FILE,
+} = require("../VARIABLES.JS");
 function readFile(file) {
   let returnData = [];
   const data = reader.readFile(file);
-  let sheets = data.SheetNames;
-  for (let i = 0; i < sheets.length; i++) {
-    const temp = reader.utils.sheet_to_json(data.Sheets[sheets[i]], {
-      defval: "",
-    });
-    temp.forEach((res) => {
-      returnData.push(res);
-    });
-  }
+  let sheet = data.SheetNames[0];
+  const temp = reader.utils.sheet_to_json(data.Sheets[sheet], {
+    defval: "",
+  });
+  temp.forEach((res) => {
+    returnData.push(res);
+  });
   return returnData;
 }
-
 function createFile(data) {
   let originalKeys = revertKeys(data);
-  // Create a new workbook object.
   let workbook = reader.utils.book_new();
   // Create a new worksheet from the data.
+  let wscols = [
+    { wch: 15 },
+    { wch: 50 },
+    { wch: 10 },
+    { wch: 15 },
+    { wch: 25 },
+  ];
   let worksheet = reader.utils.json_to_sheet(originalKeys);
+  worksheet["!cols"] = wscols;
   // Add the worksheet to the workbook.
   reader.utils.book_append_sheet(workbook, worksheet, "Sheet1");
   // Write the workbook to a new Excel file.
-  reader.writeFile(workbook, `./data/${OUTPUT_FILE}`);
+  reader.writeFile(workbook, `./data/${OUTPUT_FILE}`, {
+    bookType: "xlsx",
+    type: "binary",
+  });
 }
 
 function convertToDate(stringOrNum) {
@@ -187,14 +200,19 @@ function markAsAdded(bd, object) {
   bd[foundIdx].added = true;
   return bd;
 }
-function duplicateItemWithSC(hk, obj) {
+function duplicateItemWithSC(hk, obj, number) {
   let index = _.findIndex(hk, obj);
   if (index !== -1) {
     // Create a deep copy of the object to avoid reference issues
     let duplicate = JSON.parse(JSON.stringify(hk[index]));
     // Insert the duplicate object right after the original
     duplicate.airOrShip = "SC";
-    duplicate.added = false;
+    if (typeof number == "number") {
+      duplicate.added = true;
+      duplicate.qty = number;
+    } else {
+      duplicate.added = false;
+    }
     hk.splice(index + 1, 0, duplicate);
   }
   return hk;
