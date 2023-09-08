@@ -1,13 +1,11 @@
 const _ = require("lodash");
 const reader = require("xlsx");
-const { DAYS_TO_ADD, OUTPUT_FILE } = require("../VARIABLES.JS");
+const { DAYS_TO_ADD, OUTPUT_FILE, WEIGHT_TO_ADD } = require("../VARIABLES.JS");
 function readFile(file) {
   let returnData = [];
   const data = reader.readFile(file);
   let sheets = data.SheetNames;
-  console.log(data);
   for (let i = 0; i < sheets.length; i++) {
-    console.log(sheets[i]);
     const temp = reader.utils.sheet_to_json(data.Sheets[sheets[i]], {
       defval: "",
     });
@@ -19,14 +17,15 @@ function readFile(file) {
 }
 
 function createFile(data) {
+  let originalKeys = revertKeys(data);
   // Create a new workbook object.
   let workbook = reader.utils.book_new();
   // Create a new worksheet from the data.
-  let worksheet = reader.utils.json_to_sheet(data);
+  let worksheet = reader.utils.json_to_sheet(originalKeys);
   // Add the worksheet to the workbook.
   reader.utils.book_append_sheet(workbook, worksheet, "Sheet1");
   // Write the workbook to a new Excel file.
-  reader.writeFile(workbook, OUTPUT_FILE);
+  reader.writeFile(workbook, `./data/${OUTPUT_FILE}`);
 }
 
 function convertToDate(stringOrNum) {
@@ -116,6 +115,8 @@ function reassignKeys(data, type) {
       if (key.toLowerCase().includes("item description")) {
         let kg = getWeight(obj[key]);
         newObj["kg"] = kg;
+        // TODO: Do you need this?
+        newObj["added"] = false;
       }
 
       if (key.toLowerCase().includes("date of issue")) {
@@ -127,10 +128,22 @@ function reassignKeys(data, type) {
         } else {
           newObj["before"] = false;
         }
+        newObj["added"] = false;
       }
       if (key.toLowerCase().includes("assign maximum in transit")) {
         let assignMax = convertToDate(obj[key]);
+        // console.log("assign max", assignMax);
+        if (isNaN(assignMax)) {
+          obj[key] = " ";
+        } else {
+          obj[key] = assignMax;
+        }
         obj[key] = assignMax;
+      }
+
+      if (key.toLowerCase().includes("owed quantity")) {
+        let addWeight = obj[key] + WEIGHT_TO_ADD;
+        obj[key] = addWeight;
       }
 
       let keyIndex = oldKeys.indexOf(index);
@@ -147,10 +160,52 @@ function reassignKeys(data, type) {
   });
   return result;
 }
+function revertKeys(array) {
+  let newArray = array.map((obj) => {
+    let newObj = { ...obj }; // create a copy of the object
+    newObj["Item Number"] = newObj.materialNo;
+    newObj["Item Description"] = newObj.description;
+    newObj["Qty"] = newObj.qty;
+    newObj["By air or ship"] = newObj.airOrShip;
+    newObj["Remarks"] = newObj.remarks;
+    delete newObj.materialNo;
+    delete newObj.description;
+    delete newObj.qty;
+    // TO DO: do you need this?
+    delete newObj.added;
+    delete newObj.kg;
+    delete newObj.airOrShip;
+    delete newObj.remarks;
+    return newObj;
+  });
+  return newArray;
+}
+function markAsAdded(bd, object) {
+  let foundIdx = _.findIndex(bd, function (item) {
+    return item == object;
+  });
+  bd[foundIdx].added = true;
+  return bd;
+}
+function duplicateItemWithSC(hk, obj) {
+  let index = _.findIndex(hk, obj);
+  if (index !== -1) {
+    // Create a deep copy of the object to avoid reference issues
+    let duplicate = JSON.parse(JSON.stringify(hk[index]));
+    // Insert the duplicate object right after the original
+    duplicate.airOrShip = "SC";
+    duplicate.added = false;
+    hk.splice(index + 1, 0, duplicate);
+  }
+  return hk;
+}
 
 module.exports = {
+  revertKeys,
   reassignKeys,
+  duplicateItemWithSC,
   readFile,
+  markAsAdded,
   createFile,
   convertToDate,
   getWeight,

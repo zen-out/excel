@@ -1,33 +1,117 @@
-const reader = require("xlsx");
 const _ = require("lodash");
+const { markAsAdded, duplicateItemWithSC } = require("./helper.js");
 
-let materialNo = "TAC00070840";
+function markBefores(hk, bd, test) {
+  for (let i = 0; i < hk.length; i++) {
+    if (!hk[i].added) {
+      let actualQuantity = 0;
+      let materialNo = hk[i].materialNo;
+      let bd_filter = _.filter(bd, { materialNo: materialNo });
 
-function eachBD(hk, bd) {
-  let materialNos = hk.map((obj) => obj.materialNo);
-  for (let i = 0; i < materialNos.length; i++) {
-    let run = eachItem(hk, bd, materialNos[i]);
+      let splitOccured = false;
+      let airShipFlag = false;
+      // Loop through filtered bd
+
+      for (let j = 0; j < bd_filter.length; j++) {
+        let currBD = bd_filter[j];
+        if (!currBD.added) {
+          if (materialNo == test) {
+            // console.log("first test", currBD);
+          }
+          if (currBD.before) {
+            if (
+              !isNaN(currBD.assignMaxInTransit) &&
+              currBD.assignMaxInTransit > currBD.dateOfIssue &&
+              currBD.allocateInTransit != 0
+            ) {
+              airShipFlag = true;
+              actualQuantity = currBD.allocateInTransit;
+              markAsAdded(bd, currBD);
+            } else if (currBD.owedQty != 0) {
+              let getRounded = Math.ceil(currBD.owedQty / hk[i].kg);
+              actualQuantity = getRounded;
+              airShipFlag = true;
+              markAsAdded(bd, currBD);
+            }
+          } else {
+          }
+        }
+      }
+      if (airShipFlag) {
+        let otherAfters = _.filter(bd_filter, function (item) {
+          return item.before === false && item.owedQty > 0;
+        });
+        if (otherAfters.length > 0) {
+          hk = duplicateItemWithSC(hk, hk[i]);
+        }
+        hk[i].airOrShip = "AC";
+        hk[i].qty = actualQuantity;
+        console.log(actualQuantity);
+        // console.log(otherAfters);
+        markAsAdded(hk, hk[i]);
+      }
+    }
   }
-}
-function eachItem(hk, bd, materialNo) {
-  let hk_filter = hk.filter((getObj) => {
-    getObj.materialNo = materialNo;
-  });
-  let bd_filter = bd.filter((getObj) => {
-    getObj.materialNo = materialNo;
-  });
-  let splitOccured = false;
-  let totalAirShip = 0;
-  let totalSeaShip = 0;
-  let airShipFlag = false;
-  for (let i = 0; i < bd_filter; i++) {}
-  let befores = currentBD.filter((getObj) => {
-    getObj.before = true;
-  });
-  let afters = currentBD.filter((getObj) => {
-    getObj.before = false;
-  });
-  let beforeSum = befores.reduce((sum, obj) => sum + obj.owedQty, 0);
+  // let _test = _.filter(hk, { materialNo: test });
+  // console.log("/n/nTEST/n/n", _test);
+  return { hk, bd };
 }
 
-module.exports = { eachBD };
+function markAfters(hk, bd, test) {
+  for (let i = 0; i < hk.length; i++) {
+    let actualQuantity = 0;
+    if (!hk[i].added) {
+      let materialNo = hk[i].materialNo;
+      let bd_filter = _.filter(bd, { materialNo: materialNo });
+      // console.log(bd_filter);
+      let splitOccured = false;
+      let seaShipFlag = false;
+      // Loop through filtered bd
+      for (let j = 0; j < bd_filter.length; j++) {
+        let currBD = bd_filter[j];
+        if (!currBD.added) {
+          if (materialNo == test) {
+            // console.log("first test", currBD);
+          }
+          if (!currBD.before) {
+            if (currBD.owedQty != 0) {
+              actualQuantity += currBD.owedQty;
+              seaShipFlag = true;
+              markAsAdded(bd, currBD);
+            }
+          }
+        }
+      }
+
+      if (seaShipFlag) {
+        let getBefore = _.find(hk, {
+          materialNo: hk[i].materialNo,
+          airOrShip: "AC",
+        });
+        if (getBefore) {
+          let getIndex = _.findIndex(hk, {
+            materialNo: hk[i].materialNo,
+            airOrShip: "AC",
+          });
+          hk[getIndex].remarks = `AC ${getBefore.qty}, SC rest`;
+          // console.log("actual and before", actualQuantity, getBefore.qty);
+          if (materialNo == test) {
+            console.log("here", hk[i]);
+            console.log("curr", hk[i].qty);
+            // console.log("first test", currBD);
+          }
+          actualQuantity = actualQuantity - getBefore.qty;
+          hk[i].remarks = `AC ${getBefore.qty}, SC rest`;
+        }
+        hk[i].airOrShip = "SC";
+        hk[i].qty = actualQuantity;
+        markAsAdded(hk, hk[i]);
+      }
+    }
+  }
+
+  // console.log(hk);
+  return { hk, bd };
+}
+
+module.exports = { markBefores, markAfters };
