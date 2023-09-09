@@ -40,9 +40,11 @@ function markBefores(hk, bd, test) {
       let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });
       let { airShipFlag, actualQuantity } = getBeforeQuantity(bd, bd_filter);
-
       if (airShipFlag) {
         let getBefore = getBeforeQty(hk, hk[i], actualQuantity);
+        if (test == materialNo) {
+          console.log(actualQuantity, "get before", getBefore);
+        }
         let otherAfters = _.filter(bd_filter, function (item) {
           return item.before === false && item.owedQty > 0;
         });
@@ -52,50 +54,6 @@ function markBefores(hk, bd, test) {
         }
         hk[i].qty = getBefore;
         hk[i].airOrShip = "AC";
-        // let otherAfters = _.filter(bd_filter, function (item) {
-        //   return item.before === false && item.owedQty > 0;
-        // });
-        // let otherHKs = _.filter(hk, function (item) {
-        //   return item.before === false && item.owedQty > 0;
-        // });
-        // // may add condition, if there are no more other item numbers
-        // if (otherAfters.length > 0 && !otherHKs.length) {
-        //   let duplicate = JSON.parse(JSON.stringify(hk[i]));
-        //   if (materialNo.includes("81200")) {
-        //     console.log("duplicate", duplicate);
-        //   }
-        //   afters.push(duplicate);
-        // }
-
-        // markAsAdded(hk, hk[i]);
-        // let mergedArray = _.concat(afters, hk);
-        // hk = _.orderBy(mergedArray, "materialNo");
-
-        // let getBefore = getBeforeQty(hk, hk[i], actualQuantity);
-        // // console.log()
-
-        // if (materialNo == test) {
-        //   console.log(hk[i], "HERE", getBefore);
-        // }
-        // hk[i].qty = getBefore;
-        // hk[i].airOrShip = "AC";
-
-        /* else if (hk[i].qty > actualQuantity) {
-          // what's this again? // TAC11173780 // TAC11179670
-          let scQty = hk[i].qty - actualQuantity;
-          hk = duplicateItemWithSC(hk, hk[i], scQty.toFixed(2));
-        } */
-        /*
-          if (otherAfters.length > 0) {
-          hk = duplicateItemWithSC(hk, hk[i], false);
-        } else if (hk[i].qty > actualQuantity) {
-          // what's this again? // TAC11173780 // TAC11179670
-          let scQty = hk[i].qty - actualQuantity;
-          hk = duplicateItemWithSC(hk, hk[i], scQty.toFixed(2));
-        } else {
-          hk[i].qty = actualQuantity;
-        }
-        */
       }
     }
   }

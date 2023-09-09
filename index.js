@@ -14,14 +14,20 @@ const actualOutput = readFile(`./data/originalOutput.xlsx`);
 let reassignedOutput = reassignKeys(actualOutput, "hk");
 let reassignedHK = reassignKeys(hkFile, "hk");
 let reassignedBD = reassignKeys(bdFile, "bd");
-let materialNo = "TAC11181200";
+let materialNo = "TAC00070840";
 // do it blind
 
 // beforeTest(reassignedHK);
 function afterTest() {
+  console.log("");
+  console.log("*** HEREEEE ***");
+  console.log("");
   let result = markBefores(reassignedHK, reassignedBD, materialNo);
+  console.log("");
+  console.log("*** HEREEEE ***");
+  console.log("");
   let hk = result.hk;
-  console.log("hk", hk);
+  // console.log("hk", hk);
   runTest(reassignedOutput, hk);
 
   // let filteredArr = _.filter(hk, (item) =>
@@ -52,7 +58,9 @@ function everyNumber(currHKQty, hkKg, bdQty) {
 everyNumber(31.9, 0.9, 12.9);
 
 function testOne() {
+  console.log("HEREEEE");
   let { hk, bd } = markBefores(reassignedHK, reassignedBD, materialNo);
+
   runTest(reassignedOutput, hk);
 
   let filteredHK = _.filter(reassignedHK, { materialNo: materialNo });
