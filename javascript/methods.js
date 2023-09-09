@@ -66,8 +66,6 @@ function markBefores(hk, bd, test) {
   }
   // let _test = _.filter(hk, { materialNo: test });
   // console.log("/n/nTEST/n/n", _test);
-  console.log("return", hk[0]);
-  console.log(hk, "hkhere");
   return { hk, bd };
 }
 
