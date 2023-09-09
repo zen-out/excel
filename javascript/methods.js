@@ -35,22 +35,22 @@ function markBefores(hk, bd, test) {
         }
       }
       if (airShipFlag) {
+        let getBefore = getBeforeQty(hk, hk[i], actualQuantity);
         let otherAfters = _.filter(bd_filter, function (item) {
           return item.before === false && item.owedQty > 0;
         });
+        // may add condition, if there are no more other item numbers
         if (otherAfters.length > 0) {
           hk = duplicateItemWithSC(hk, hk[i], false);
         }
+        hk[i].qty = getBefore;
+        hk[i].airOrShip = "AC";
         /* else if (hk[i].qty > actualQuantity) {
           // what's this again? // TAC11173780 // TAC11179670
           let scQty = hk[i].qty - actualQuantity;
           hk = duplicateItemWithSC(hk, hk[i], scQty.toFixed(2));
         } */
-        let getBefore = getBeforeQty(hk[i].qty, hk[i].kg, actualQuantity);
-        hk[i].qty = getBefore;
-        hk[i].airOrShip = "AC";
-        markAsAdded(hk, hk[i]);
-        /* original 
+        /*
           if (otherAfters.length > 0) {
           hk = duplicateItemWithSC(hk, hk[i], false);
         } else if (hk[i].qty > actualQuantity) {
@@ -64,8 +64,6 @@ function markBefores(hk, bd, test) {
       }
     }
   }
-  // let _test = _.filter(hk, { materialNo: test });
-  // console.log("/n/nTEST/n/n", _test);
   return { hk, bd };
 }
 
@@ -75,7 +73,6 @@ function markAfters(hk, bd, test) {
     if (!hk[i].added) {
       let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });
-      // console.log(bd_filter);
       let splitOccured = false;
       let seaShipFlag = false;
 
@@ -84,7 +81,6 @@ function markAfters(hk, bd, test) {
         let currBD = bd_filter[j];
         if (!currBD.added) {
           if (materialNo == test) {
-            console.log("first test", currBD);
           }
           if (!currBD.before) {
             if (currBD.owedQty != 0) {
@@ -107,10 +103,6 @@ function markAfters(hk, bd, test) {
             airOrShip: "AC",
           });
           hk[getIndex].remarks = `AC ${getBefore.qty}, SC rest`;
-          // console.log("actual and before", actualQuantity, getBefore.qty);
-          if (materialNo == test) {
-            // console.log(hk[i].qty, "31.9");
-          }
           actualQuantity = hk[i].qty - getBefore.qty;
           hk[i].remarks = `AC ${getBefore.qty}, SC rest`;
         }
@@ -124,7 +116,6 @@ function markAfters(hk, bd, test) {
     }
   }
 
-  // console.log(hk);
   return { hk, bd };
 }
 

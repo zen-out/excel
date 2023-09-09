@@ -13,6 +13,7 @@ function readFile(file) {
   let sheet = data.SheetNames[0];
   const temp = reader.utils.sheet_to_json(data.Sheets[sheet], {
     defval: "",
+    raw: true,
   });
   temp.forEach((res) => {
     returnData.push(res);
@@ -145,7 +146,6 @@ function reassignKeys(data, type) {
       }
       if (key.toLowerCase().includes("assign maximum in transit")) {
         let assignMax = convertToDate(obj[key]);
-        // console.log("assign max", assignMax);
         if (isNaN(assignMax)) {
           obj[key] = " ";
         } else {

@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const { WEIGHT_TO_ADD } = require("../variables.js");
 
 function markAsAdded(array, object) {
   let foundIdx = _.findIndex(array, function (item) {
@@ -26,19 +27,30 @@ function duplicateItemWithSC(hk, obj, number) {
 }
 // 70840
 
-function getBeforeQty2(hk, currHK, bdActualBeforeQty) {
+function getBeforeQty(hk, currHK, bdActualBeforeQty) {
+  bdActualBeforeQty += WEIGHT_TO_ADD;
   let returnQty;
   let currHKQty = currHK.qty;
   let hkKg = currHK.kg;
   let filteredHK = _.filter(hk, { materialNo: currHK.materialNo });
-  // console.log(filteredHK.length, "length");
   if (filteredHK.length > 1) {
     let sortedArr = _.sortBy(filteredHK, "qty");
     let result = _.find(sortedArr, function (item) {
       return item.qty > bdActualBeforeQty;
     });
     if (result) {
+      currHKQty = result.qty;
+      hkKg = result.kg;
+      let seeIfWhole = bdActualBeforeQty / hkKg;
+      if (Number.isInteger(seeIfWhole)) {
+        returnQty = seeIfWhole;
+      } else {
+        let rounded = Math.ceil(seeIfWhole);
+        returnQty = rounded * hkKg;
+      }
+      markAsAdded(hk, result);
     } else {
+      // lol
     }
   } else {
     if (currHKQty > bdActualBeforeQty) {
@@ -57,23 +69,7 @@ function getBeforeQty2(hk, currHK, bdActualBeforeQty) {
   return returnQty;
 }
 
-function getBeforeQty(hk, currHKQty, hkKg, bdActualBeforeQty) {
-  let returnQty;
-  if (currHKQty > bdActualBeforeQty) {
-    let seeIfWhole = bdActualBeforeQty / hkKg;
-    if (Number.isInteger(seeIfWhole)) {
-      returnQty = seeIfWhole;
-    } else {
-      let rounded = Math.ceil(seeIfWhole);
-      returnQty = rounded * hkKg;
-    }
-  } else {
-    returnQty = currHKQty;
-  }
-  return returnQty;
-}
-
-function getAfterQty(filteredHK, filteredBD, currQty, actualQty) {
+function getAfterQty(hk, currHK, bdActualAfterQty) {
   let returnQty;
   let totalBefores = 0;
   let totalHK = _.sumBy(filteredHK, "qty");
@@ -84,13 +80,11 @@ function getAfterQty(filteredHK, filteredBD, currQty, actualQty) {
   } else {
     // returnQty =
   }
-  console.log(returnQty);
 }
 
 module.exports = {
-  getBeforeQty,
   getAfterQty,
   markAsAdded,
-  getBeforeQty2,
+  getBeforeQty,
   duplicateItemWithSC,
 };
