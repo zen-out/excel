@@ -17,15 +17,39 @@ let reassignedBD = reassignKeys(bdFile, "bd");
 let materialNo = "TAC11181200";
 // do it blind
 
+// beforeTest(reassignedHK);
 function afterTest() {
-  let { hk, bd } = markBefores(reassignedHK, reassignedBD, materialNo);
-  let filteredArr = _.filter(hk, (item) =>
-    _.includes(item.materialNo, "70840")
-  );
-  console.log(filteredArr);
-  // let first = getAfterQty(hk, filteredArr[0], 12.9); // should be 13.5, 70840
+  let result = markBefores(reassignedHK, reassignedBD, materialNo);
+  let hk = result.hk;
+  console.log("hk", hk);
+  runTest(reassignedOutput, hk);
+
+  // let filteredArr = _.filter(hk, (item) =>
+  //   _.includes(item.materialNo, "70840")
+  // );
+  // console.log("filtered", filteredArr);
+  // let item_70840 = getAfterQty(hk, filteredArr[0], 31.644);
+  // console.log("should be ", item_70840);
 }
 afterTest();
+
+// not sure if it also applies to afters.
+function everyNumber(currHKQty, hkKg, bdQty) {
+  if (currHKQty > bdQty) {
+    let seeIfWhole = bdQty / hkKg;
+    if (Number.isInteger(seeIfWhole)) {
+      returnQty = seeIfWhole;
+    } else {
+      let rounded = Math.ceil(seeIfWhole);
+      returnQty = rounded * hkKg;
+    }
+  } else {
+    returnQty = currHKQty;
+  }
+  console.log(returnQty);
+  return returnQty;
+}
+everyNumber(31.9, 0.9, 12.9);
 
 function testOne() {
   let { hk, bd } = markBefores(reassignedHK, reassignedBD, materialNo);
