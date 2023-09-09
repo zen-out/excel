@@ -1,7 +1,8 @@
 const _ = require("lodash");
 const {
   getBeforeQty,
-  getAfterQty,
+  getAfterQtyPartOne,
+  getAfterQtyPartTwo,
   markAsAdded,
   duplicateItemWithSC,
 } = require("./functions.js");
@@ -34,7 +35,6 @@ function getBeforeQuantity(bd, bd_filter) {
   return { airShipFlag, actualQuantity };
 }
 function markBefores(hk, bd, test) {
-  let afters = [];
   for (let i = 0; i < hk.length; i++) {
     if (!hk[i].added) {
       let materialNo = hk[i].materialNo;
@@ -42,27 +42,30 @@ function markBefores(hk, bd, test) {
       let { airShipFlag, actualQuantity } = getBeforeQuantity(bd, bd_filter);
       if (airShipFlag) {
         let getBefore = getBeforeQty(hk, hk[i], actualQuantity);
-        if (test == materialNo) {
-          console.log(actualQuantity, "get before", getBefore);
-        }
         let otherAfters = _.filter(bd_filter, function (item) {
           return item.before === false && item.owedQty > 0;
         });
-        // may add condition, if there are no more other item numbers
         if (otherAfters.length > 0) {
           hk = duplicateItemWithSC(hk, hk[i], false);
         }
         hk[i].qty = getBefore;
         hk[i].airOrShip = "AC";
+        markAsAdded(hk, hk[i]);
+      }
+      if (test == materialNo) {
+        // console.log(hk[i], "each one");
       }
     }
   }
+  hk = _.orderBy(hk, ["qty"], ["desc"]);
+  bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
 }
 
 function markAfters(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
     if (!hk[i].added) {
+      console.log(hk[i]);
       let actualQuantity = 0;
       let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });
@@ -83,7 +86,7 @@ function markAfters(hk, bd, test) {
       }
 
       if (seaShipFlag) {
-        let getAfter = getAfterQty(hk, hk[i], actualQuantity);
+        let getAfter = getAfterQtyPartOne(hk, hk[i], actualQuantity);
         hk[i].airOrShip = "SC";
         if (hk[i].qty < hk[i].kg) {
           hk[i].qty = hk[i].kg;

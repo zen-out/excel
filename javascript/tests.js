@@ -1,6 +1,10 @@
 const _ = require("lodash");
-const { getBeforeQty, getAfterQty } = require("./functions.js");
-
+const {
+  getBeforeQty,
+  getAfterQtyPartOne,
+  getAfterQtyPartTwo,
+} = require("./functions.js");
+const { markBefores } = require("./methods");
 function beforeTest(reassignedHK) {
   let filteredArr = _.filter(reassignedHK, (item) =>
     _.includes(item.materialNo, "70840")
@@ -57,6 +61,89 @@ function beforeTest(reassignedHK) {
   console.log("should be 27", eighth);
   console.log("should be 8.9", ninth);
 }
+
+function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
+  console.log("");
+  console.log("*** HEREEEE ***");
+  console.log("");
+  // HERE
+  let result = markBefores(reassignedHK, reassignedBD, "materialNo");
+  let hk = result.hk;
+  let filteredNotAddedBD = _.filter(result.bd, { added: false });
+  // first
+  let filteredArr = _.filter(
+    hk,
+    (item) => _.includes(item.materialNo, "70840") && item.added == false
+  );
+  if (filteredArr) {
+    let item_70840 = getAfterQtyPartOne(hk, filteredArr[0], 31.644);
+    console.log("should be 18.4", item_70840);
+  } else {
+    console.log("test case for part two");
+  }
+  // second
+  let filteredArr2 = _.filter(
+    hk,
+    (item) => _.includes(item.materialNo, "73780") && item.added == false
+  );
+  if (filteredArr2.length) {
+    // let item_73780 = getAfterQtyPartOne(hk, filteredArr2[0], 6.046);
+    // console.log("should be 15.28", item_73780);
+  } else {
+    let test2 = getAfterQtyPartTwo(reassignedHK2, hk, "TAC11173780");
+    console.log("should be 15.28", test2);
+  }
+
+  // third
+  let filteredArr3 = _.filter(
+    hk,
+    (item) => _.includes(item.materialNo, "81200") && item.added == false
+  );
+  // console.log(filteredArr3);
+  if (filteredArr3.length) {
+    let item_81200 = getAfterQtyPartOne(hk, filteredArr3[0], 36.308);
+    console.log("should be 36.3", item_81200);
+    // keep marking the item
+    let item_81200_pt2 = getAfterQtyPartOne(hk, filteredArr3[1], 36.308);
+    console.log("should be 1.9", item_81200_pt2);
+  } else {
+    console.log("test case for 81200");
+  }
+
+  // fourth
+  let filteredArr4 = _.filter(
+    hk,
+    (item) => _.includes(item.materialNo, "81440") && item.added == false
+  );
+  if (filteredArr4.length) {
+    let item_81400 = getAfterQtyPartOne(hk, filteredArr4[0], 1.918);
+    console.log("should be 2.6", item_81400);
+    // keep marking the item
+  } else {
+    console.log("test case for item_81400");
+  }
+
+  // fifth
+  let filteredArr5 = _.filter(
+    hk,
+    (item) => _.includes(item.materialNo, "84580") && item.added == false
+  );
+  if (filteredArr5.length) {
+    let item_84580 = getAfterQtyPartOne(hk, filteredArr5[0]);
+    console.log("should be 22.71", item_84580);
+    // keep marking the item
+  } else {
+    let test2 = getAfterQtyPartTwo(reassignedHK2, hk, "TAC11184580");
+    console.log("should be 22.71", test2);
+  }
+
+  // ABOVE
+  console.log("");
+  console.log("*** HEREEEE ***");
+  console.log("");
+  // console.log("hk", hk);
+  runTest(reassignedOutput, hk);
+}
 function runTest(reassignedOutput, hkOutput) {
   console.log("");
   console.log("*** TEST ***");
@@ -81,6 +168,6 @@ function runTest(reassignedOutput, hkOutput) {
   console.log("");
 }
 
-module.exports = { runTest, beforeTest };
+module.exports = { runTest, beforeTest, afterTest };
 
 // remove
