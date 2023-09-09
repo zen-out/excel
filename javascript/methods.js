@@ -1,6 +1,9 @@
 const _ = require("lodash");
-const { markAsAdded, duplicateItemWithSC } = require("./helper.js");
-
+const {
+  getBeforeQty,
+  markAsAdded,
+  duplicateItemWithSC,
+} = require("./functions.js");
 function markBefores(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
     if (!hk[i].added) {
@@ -13,22 +16,21 @@ function markBefores(hk, bd, test) {
         let currBD = bd_filter[j];
         if (!currBD.added) {
           if (currBD.before) {
+            // If it has an assign max in transit date, and its date is creater than date of issue, and it's allocate in transit date is not zero
             if (
               !isNaN(currBD.assignMaxInTransit) &&
               currBD.assignMaxInTransit > currBD.dateOfIssue &&
               currBD.allocateInTransit != 0
             ) {
               airShipFlag = true;
+              // add allocate in transit to actualQuantity
               actualQuantity = actualQuantity + currBD.allocateInTransit;
               markAsAdded(bd, currBD);
             } else if (currBD.owedQty != 0) {
-              let getRounded = Math.ceil(currBD.owedQty / hk[i].kg);
-              let getSheets = getRounded * hk[i].kg;
-              actualQuantity = actualQuantity + getSheets;
+              actualQuantity = actualQuantity += currBD.owedQty;
               airShipFlag = true;
               markAsAdded(bd, currBD);
             }
-          } else {
           }
         }
       }
@@ -38,13 +40,16 @@ function markBefores(hk, bd, test) {
         });
         if (otherAfters.length > 0) {
           hk = duplicateItemWithSC(hk, hk[i], false);
-        } else if (hk[i].qty > actualQuantity) {
+        }
+        /* else if (hk[i].qty > actualQuantity) {
           // what's this again? // TAC11173780 // TAC11179670
           let scQty = hk[i].qty - actualQuantity;
           hk = duplicateItemWithSC(hk, hk[i], scQty.toFixed(2));
-        }
-        hk[i].qty = actualQuantity;
-
+        } */
+        let getBefore = getBeforeQty(hk[i].qty, hk[i].kg, actualQuantity);
+        hk[i].qty = getBefore;
+        hk[i].airOrShip = "AC";
+        markAsAdded(hk, hk[i]);
         /* original 
           if (otherAfters.length > 0) {
           hk = duplicateItemWithSC(hk, hk[i], false);
@@ -56,14 +61,13 @@ function markBefores(hk, bd, test) {
           hk[i].qty = actualQuantity;
         }
         */
-
-        hk[i].airOrShip = "AC";
-        markAsAdded(hk, hk[i]);
       }
     }
   }
   // let _test = _.filter(hk, { materialNo: test });
   // console.log("/n/nTEST/n/n", _test);
+  console.log("return", hk[0]);
+  console.log(hk, "hkhere");
   return { hk, bd };
 }
 

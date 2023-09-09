@@ -193,37 +193,11 @@ function revertKeys(array) {
   });
   return newArray;
 }
-function markAsAdded(bd, object) {
-  let foundIdx = _.findIndex(bd, function (item) {
-    return item == object;
-  });
-  bd[foundIdx].added = true;
-  return bd;
-}
-function duplicateItemWithSC(hk, obj, number) {
-  let index = _.findIndex(hk, obj);
-  if (index !== -1) {
-    // Create a deep copy of the object to avoid reference issues
-    let duplicate = JSON.parse(JSON.stringify(hk[index]));
-    // Insert the duplicate object right after the original
-    duplicate.airOrShip = "SC";
-    if (typeof number == "number") {
-      duplicate.added = true;
-      duplicate.qty = number;
-    } else {
-      duplicate.added = false;
-    }
-    hk.splice(index + 1, 0, duplicate);
-  }
-  return hk;
-}
 
 module.exports = {
   revertKeys,
   reassignKeys,
-  duplicateItemWithSC,
   readFile,
-  markAsAdded,
   createFile,
   convertToDate,
   getWeight,
