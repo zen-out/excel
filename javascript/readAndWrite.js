@@ -3,12 +3,12 @@ const {
   OUTPUT_FILE,
   WEIGHT_TO_ADD,
   CURRENT_DATE,
+  WEIRD_DATES,
 } = require("./variables.js");
 const _ = require("lodash");
 const reader = require("xlsx");
-const { HK_FILE, BD_FILE, ANSWERS_FILE } = require("./variables.js");
 class ReadAndWrite {
-  constructor() {
+  constructor(HK_FILE, BD_FILE, ANSWERS_FILE) {
     this.hkFile = this.readFile(HK_FILE);
     this.bdFile = this.readFile(BD_FILE);
     this.answerFile = this.readFile(ANSWERS_FILE);
@@ -31,6 +31,15 @@ class ReadAndWrite {
       returnData.push(res);
     });
     return returnData;
+  }
+  getHK() {
+    return this.hkFile;
+  }
+  getBD() {
+    return this.bdFile;
+  }
+  getOutput() {
+    return this.answerFile;
   }
   createFile(data) {
     let originalKeys = revertKeys(data);
@@ -79,6 +88,7 @@ class ReadAndWrite {
     let returnDate;
     if (typeof stringOrNum === "string") {
       returnDate = new Date(stringOrNum.trim());
+      return returnDate;
     } else if (typeof stringOrNum === "number") {
       const excelEpoch = new Date(1899, 11, 31);
       const excelEpochAsUnixTimestamp = excelEpoch.getTime();
@@ -86,12 +96,54 @@ class ReadAndWrite {
       returnDate = new Date(
         excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
       );
+      let resultDate = new Date(returnDate.getTime());
+      resultDate.setDate(returnDate.getDate() + 1);
+      return resultDate;
     } else {
       returnDate = null;
+      return returnDate;
     }
-    let resultDate = new Date(returnDate.getTime());
-    resultDate.setDate(returnDate.getDate() + 1);
-    return resultDate;
+  }
+  convertToDate2(stringOrNum) {
+    let returnDate;
+    if (typeof stringOrNum === "string") {
+      returnDate = new Date(stringOrNum.trim());
+      return returnDate;
+    } else if (typeof stringOrNum === "number") {
+      if (WEIRD_DATES) {
+        const excelEpoch = new Date(1899, 11, 31);
+        const excelEpochAsUnixTimestamp = excelEpoch.getTime();
+        const millisecondsPerDay = 24 * 60 * 60 * 1000;
+        returnDate = new Date(
+          excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
+        );
+        let resultDate = new Date(returnDate.getTime());
+        resultDate.setDate(returnDate.getDate() + 1);
+        return resultDate;
+      } else {
+        const excelEpoch = new Date(1899, 11, 31);
+        const excelEpochAsUnixTimestamp = excelEpoch.getTime();
+        const millisecondsPerDay = 24 * 60 * 60 * 1000;
+        returnDate = new Date(
+          excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
+        );
+        let newDate = new Date(returnDate);
+        console.log(newDate);
+        let month = newDate.getUTCMonth() + 1; // getMonth() returns month index starting from 0
+        let day = newDate.getUTCDate();
+        let year = newDate.getUTCFullYear();
+        let hours = newDate.getUTCHours();
+        let minutes = newDate.getUTCMinutes();
+        let seconds = newDate.getUTCSeconds();
+        let swappedDate = new Date(
+          Date.UTC(year, day - 1, month, hours, minutes, seconds)
+        );
+        return swappedDate;
+      }
+    } else {
+      returnDate = null;
+      return returnDate;
+    }
   }
   getNextWedAndDays(currDate) {
     let resultDate = new Date(currDate.getTime());
