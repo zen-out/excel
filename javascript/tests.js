@@ -69,8 +69,10 @@ function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
   // HERE
   let result = markBefores(reassignedHK, reassignedBD, "materialNo");
   let hk = result.hk;
-  console.log(hk);
+  // console.log(_.sortBy(hk, "materialNo"));
   // console.log(_.filter(hk, { added: false }));
+
+  // console.log(_.filter(hk, { materialNo: "TAC11181200" }));
   // first
   let filteredArr = _.filter(
     hk,

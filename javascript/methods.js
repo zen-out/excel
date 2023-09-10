@@ -1,9 +1,11 @@
 const _ = require("lodash");
 const {
   getBeforeQty,
+  getBeforeCalculatedQuantity,
   getAfterQtyPartOne,
   getAfterQtyPartTwo,
-  markAsAdded,
+  markBDAdded,
+  markHKAdded,
   duplicateItemWithSC,
 } = require("./functions.js");
 
@@ -23,11 +25,11 @@ function getBeforeActualQuantity(bd, bd_filter) {
           airShipFlag = true;
           // add allocate in transit to actualQuantity
           actualQuantity = actualQuantity + currBD.allocateInTransit;
-          markAsAdded(bd, currBD);
+          markBDAdded(bd, currBD);
         } else if (currBD.owedQty != 0) {
           actualQuantity = actualQuantity += currBD.owedQty;
           airShipFlag = true;
-          markAsAdded(bd, currBD);
+          markBDAdded(bd, currBD);
         }
       }
     }
@@ -46,29 +48,14 @@ function markBefores(hk, bd, test) {
         bd,
         bd_filter
       );
+
       if (airShipFlag) {
-        let { calculatedBeforeQty, acSheets } = getBeforeQty(
-          hk,
-          hk[i],
-          actualQuantity
-        );
-        if (hk[i].qty > calculatedBeforeQty) {
-          let otherAfters = _.filter(bd_filter, function (item) {
-            return item.before === false && item.owedQty > 0;
-          });
-          markAsAdded(bd, otherAfters);
-          let scQty = hk[i].qty - calculatedBeforeQty;
-          hk[i].remarks = `拆${acSheets}条空运其余船运`;
-          hk = duplicateItemWithSC(hk, hk[i], scQty);
-          // not too sure about this condition
-        }
-        hk[i].qty = calculatedBeforeQty;
-        hk[i].airOrShip = "AC";
-      }
-      if (test == materialNo) {
+        hk = getBeforeQty(hk, hk[i], bd, actualQuantity);
       }
     }
   }
+
+  console.log(hk, "hk");
   hk = _.orderBy(hk, ["qty"], ["desc"]);
   bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
@@ -90,7 +77,7 @@ function markAfters(hk, bd, test) {
             if (currBD.owedQty != 0) {
               actualQuantity += currBD.owedQty;
               seaShipFlag = true;
-              markAsAdded(bd, currBD);
+              markBDAdded(bd, currBD);
             }
           }
         }
@@ -102,7 +89,7 @@ function markAfters(hk, bd, test) {
         if (hk[i].qty < hk[i].kg) {
           hk[i].qty = hk[i].kg;
         }
-        markAsAdded(hk, hk[i]);
+        markHKAdded(hk, hk[i]);
       }
     }
   }

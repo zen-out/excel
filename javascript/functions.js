@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { WEIGHT_TO_ADD } = require("./variables.js");
 
-function markAsAdded(array, arrayOrObject, addAC) {
+function markBDAdded(array, arrayOrObject) {
   if (Array.isArray(arrayOrObject)) {
     for (let i = 0; i < arrayOrObject.length; i++) {
       let foundIdx = _.findIndex(array, function (item) {
@@ -15,8 +15,30 @@ function markAsAdded(array, arrayOrObject, addAC) {
       return item == arrayOrObject;
     });
     array[foundIdx].added = true;
+    return array;
+  }
+}
+function markHKAdded(array, arrayOrObject, addAC, quantity) {
+  if (Array.isArray(arrayOrObject)) {
+    for (let i = 0; i < arrayOrObject.length; i++) {
+      let foundIdx = _.findIndex(array, function (item) {
+        return item == arrayOrObject[i];
+      });
+      if (foundIdx > -1) {
+        array[foundIdx].added = true;
+      }
+    }
+    return array;
+  } else {
+    let foundIdx = _.findIndex(array, function (item) {
+      return item == arrayOrObject;
+    });
+    array[foundIdx].added = true;
     if (addAC) {
       array[foundIdx].airOrShip = "AC";
+    }
+    if (quantity) {
+      array[foundIdx].qty = quantity;
     }
     return array;
   }
@@ -50,7 +72,49 @@ function neverMoreThanHKQty(number, hkKg, currHKQty) {
   }
 }
 // 70840
-function getBeforeQty(hk, currHK, bdActualBeforeQty) {
+function markAsAdded(array, arrayOrObject, addAC) {
+  try {
+    if (Array.isArray(arrayOrObject)) {
+      for (let i = 0; i < arrayOrObject.length; i++) {
+        let foundIdx = _.findIndex(array, function (item) {
+          return item == arrayOrObject[i];
+        });
+        if (foundIdx > -1) {
+          array[foundIdx].added = true;
+        }
+      }
+      return array;
+    } else {
+      let foundIdx = _.findIndex(array, function (item) {
+        return item == arrayOrObject;
+      });
+      array[foundIdx].added = true;
+      if (addAC) {
+        array[foundIdx].airOrShip = "AC";
+      }
+      return array;
+    }
+  } catch (error) {
+    console.debug(arrayOrObject, "errorr");
+  }
+}
+function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
+  if (hkObject.qty > calculatedBefore) {
+    let otherAfters = _.filter(bd, function (item) {
+      return (
+        item.before === false &&
+        item.owedQty > 0 &&
+        item.materialNo == hkObject.materialNo
+      );
+    });
+    markBDAdded(bd, otherAfters);
+    let scQty = hkObject.qty - calculatedBefore;
+    hkObject.remarks = `拆${acSheets}条空运其余船运`;
+    hk = duplicateItemWithSC(hk, hkObject, scQty);
+  }
+  return hk;
+}
+function getBeforeQty(hk, currHK, bd, bdActualBeforeQty) {
   // bdActualBeforeQty += WEIGHT_TO_ADD;
   let calculatedBeforeQty;
   let acSheets;
@@ -66,6 +130,8 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
     let result = _.find(sortedArr, function (item) {
       return item.qty > bdActualBeforeQty;
     });
+
+    // console.log(result, "result");
     if (result) {
       currHKQty = result.qty;
       hkKg = result.kg;
@@ -78,7 +144,7 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
         acSheets = rounded;
         calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
       }
-      markAsAdded(hk, result, true);
+      hk = markHKAdded(hk, result, true, calculatedBeforeQty);
     } else {
       // lol
     }
@@ -96,13 +162,41 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
     } else {
       calculatedBeforeQty = currHKQty;
     }
-    markAsAdded(hk, currHK);
+    hk = shouldDuplicate(hk, currHK, bd, calculatedBeforeQty, acSheets);
+    hk = markHKAdded(hk, currHK, true, calculatedBeforeQty);
   }
   if (!acSheets) {
     acSheets = null;
   }
-  return { calculatedBeforeQty, acSheets };
+  return hk;
 }
+function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
+  let returnQty;
+  if (!currHK) {
+    console.debug("ERROR", currHK, bdActualAfterQty, "ERROR");
+    return;
+  }
+  let currHKQty = currHK.qty;
+  let hkKg = currHK.kg;
+  let materialNo = currHK.materialNo;
+  let filteredHK = _.filter(hk, {
+    materialNo: materialNo,
+    added: true,
+  });
+  if (filteredHK.length) {
+    let totalBefore = _.sumBy(filteredHK, "qty");
+    let checkNegative = currHKQty - totalBefore;
+    if (checkNegative > 0) {
+      returnQty = currHKQty - totalBefore;
+    } else {
+      returnQty = currHKQty;
+    }
+  } else {
+    returnQty = currHKQty;
+  }
+  return returnQty;
+}
+
 function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
   let returnQty;
   if (!currHK) {
@@ -142,7 +236,9 @@ function getAfterQtyPartTwo(og_hk, edited_hk, test) {
 module.exports = {
   getAfterQtyPartOne,
   getAfterQtyPartTwo,
-  markAsAdded,
+  markHKAdded,
+  // getBeforeCalculatedQuantity,
+  markBDAdded,
   getBeforeQty,
   duplicateItemWithSC,
 };
