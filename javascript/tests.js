@@ -51,47 +51,50 @@ function beforeTest(reassignedHK) {
     _.includes(item.materialNo, "78770")
   );
   let ninth = getBeforeQty(reassignedHK, filteredArr9[0], 8.656); // 78700
-  console.log("should be 13.5", first);
-  console.log("should be 7.02", second);
-  console.log("should be 3.8", third);
-  console.log("should be 1.8", fourth);
-  console.log("should be 2.6", fifth);
-  console.log("should be 37.9", sixth);
-  console.log("should be 7.89", seventh);
-  console.log("should be 27", eighth);
-  console.log("should be 8.9", ninth);
+  console.debug("should be 13.5", first);
+  console.debug("should be 7.02", second);
+  console.debug("should be 3.8", third);
+  console.debug("should be 1.8", fourth);
+  console.debug("should be 2.6", fifth);
+  console.debug("should be 37.9", sixth);
+  console.debug("should be 7.89", seventh);
+  console.debug("should be 27", eighth);
+  console.debug("should be 8.9", ninth);
 }
 
 function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
-  console.log("");
-  console.log("*** HEREEEE ***");
-  console.log("");
+  console.debug("");
+  console.debug("*** HEREEEE ***");
+  console.debug("");
   // HERE
   let result = markBefores(reassignedHK, reassignedBD, "materialNo");
   let hk = result.hk;
-  let filteredNotAddedBD = _.filter(result.bd, { added: false });
+  console.log(hk);
+  // console.log(_.filter(hk, { added: false }));
   // first
   let filteredArr = _.filter(
     hk,
     (item) => _.includes(item.materialNo, "70840") && item.added == false
   );
-  if (filteredArr) {
+
+  if (filteredArr.length) {
     let item_70840 = getAfterQtyPartOne(hk, filteredArr[0], 31.644);
-    console.log("should be 18.4", item_70840);
+    console.debug("should be 18.4", item_70840);
   } else {
-    console.log("test case for part two");
+    console.debug("test case for part 70840");
   }
   // second
+  /*
   let filteredArr2 = _.filter(
     hk,
     (item) => _.includes(item.materialNo, "73780") && item.added == false
   );
   if (filteredArr2.length) {
     // let item_73780 = getAfterQtyPartOne(hk, filteredArr2[0], 6.046);
-    // console.log("should be 15.28", item_73780);
+    // console.debug("should be 15.28", item_73780);
   } else {
     let test2 = getAfterQtyPartTwo(reassignedHK2, hk, "TAC11173780");
-    console.log("should be 15.28", test2);
+    console.debug("should be 15.28", test2);
   }
 
   // third
@@ -99,15 +102,15 @@ function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
     hk,
     (item) => _.includes(item.materialNo, "81200") && item.added == false
   );
-  // console.log(filteredArr3);
+  // console.debug(filteredArr3);
   if (filteredArr3.length) {
     let item_81200 = getAfterQtyPartOne(hk, filteredArr3[0], 36.308);
-    console.log("should be 36.3", item_81200);
+    console.debug("should be 36.3", item_81200);
     // keep marking the item
     let item_81200_pt2 = getAfterQtyPartOne(hk, filteredArr3[1], 36.308);
-    console.log("should be 1.9", item_81200_pt2);
+    console.debug("should be 1.9", item_81200_pt2);
   } else {
-    console.log("test case for 81200");
+    console.debug("test case for 81200");
   }
 
   // fourth
@@ -117,10 +120,10 @@ function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
   );
   if (filteredArr4.length) {
     let item_81400 = getAfterQtyPartOne(hk, filteredArr4[0], 1.918);
-    console.log("should be 2.6", item_81400);
+    console.debug("should be 2.6", item_81400);
     // keep marking the item
   } else {
-    console.log("test case for item_81400");
+    console.debug("test case for item_81400");
   }
 
   // fifth
@@ -130,23 +133,24 @@ function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
   );
   if (filteredArr5.length) {
     let item_84580 = getAfterQtyPartOne(hk, filteredArr5[0]);
-    console.log("should be 22.71", item_84580);
+    console.debug("should be 22.71", item_84580);
     // keep marking the item
   } else {
     let test2 = getAfterQtyPartTwo(reassignedHK2, hk, "TAC11184580");
-    console.log("should be 22.71", test2);
+    console.debug("should be 22.71", test2);
   }
 
   // ABOVE
-  console.log("");
-  console.log("*** HEREEEE ***");
-  console.log("");
-  // console.log("hk", hk);
+  console.debug("");
+  console.debug("*** HEREEEE ***");
+  console.debug("");
+  // console.debug("hk", hk);
   runTest(reassignedOutput, hk);
+  */
 }
 function runTest(reassignedOutput, hkOutput) {
-  console.log("");
-  console.log("*** TEST ***");
+  console.debug("");
+  console.debug("*** TEST ***");
   let getHK = _.map(hkOutput, (item) =>
     _.pick(item, ["qty", "materialNo", "airOrShip"])
   );
@@ -157,15 +161,15 @@ function runTest(reassignedOutput, hkOutput) {
     _.some(getOutput, (obj2) => _.isEqual(obj1, obj2))
   );
   let difference = _.differenceWith(getHK, getOutput, _.isEqual);
-  console.log("wrong", difference, "wrong");
-  console.log(`NICE JOB: ${similarObjects.length}/${getOutput.length}`);
-  console.log(
+  console.debug("wrong", difference, "wrong");
+  console.debug(`NICE JOB: ${similarObjects.length}/${getOutput.length}`);
+  console.debug(
     `NICE JOB: ${((similarObjects.length / getOutput.length) * 100).toFixed(
       2
     )}%`
   );
-  console.log("*** TEST END ***");
-  console.log("");
+  console.debug("*** TEST END ***");
+  console.debug("");
 }
 
 module.exports = { runTest, beforeTest, afterTest };

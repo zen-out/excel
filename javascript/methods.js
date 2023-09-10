@@ -32,9 +32,12 @@ function getBeforeActualQuantity(bd, bd_filter) {
       }
     }
   }
+
   return { airShipFlag, actualQuantity };
 }
 function markBefores(hk, bd, test) {
+  // hk = _.sortBy(hk, "qty");
+  // bd = _.sortBy(bd, "owedQty");
   for (let i = 0; i < hk.length; i++) {
     let materialNo = hk[i].materialNo;
     if (!hk[i].added) {
@@ -57,6 +60,7 @@ function markBefores(hk, bd, test) {
           let scQty = hk[i].qty - calculatedBeforeQty;
           hk[i].remarks = `拆${acSheets}条空运其余船运`;
           hk = duplicateItemWithSC(hk, hk[i], scQty);
+          // not too sure about this condition
         }
         hk[i].qty = calculatedBeforeQty;
         hk[i].airOrShip = "AC";

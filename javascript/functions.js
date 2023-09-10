@@ -78,7 +78,6 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
         acSheets = rounded;
         calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
       }
-
       markAsAdded(hk, result, true);
     } else {
       // lol
@@ -117,37 +116,21 @@ function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
     materialNo: materialNo,
     added: true,
   });
-  // console.debug(filteredHK);
   if (filteredHK.length) {
     let totalBefore = _.sumBy(filteredHK, "qty");
-    // console.debug(bdActualAfterQty);
     let checkNegative = currHKQty - totalBefore;
     if (checkNegative > 0) {
       returnQty = currHKQty - totalBefore;
     } else {
       returnQty = currHKQty;
     }
-
-    // console purposes
-    if (materialNo.includes("70840")) {
-      // console.debug(totalBefore, " should be 13.5");
-      // console.debug(returnQty, " should be 18.4");
-    }
   } else {
     returnQty = currHKQty;
   }
   return returnQty;
-
-  // if (filteredBD.length) {
-  //   let totalBD = _.sumBy(filteredBD, "owedQty");
-  //   returnQty = currQty - totalBefores;
-  // } else {
-  //   // returnQty =
-  // }
 }
 
 function getAfterQtyPartTwo(og_hk, edited_hk, test) {
-  // console.debug(og_hk);
   let og = _.filter(og_hk, { materialNo: test });
   let hk = _.filter(edited_hk, { materialNo: test });
   let get_first = og[0].qty;

@@ -13,16 +13,21 @@ const { markBefores, markAfters } = require("./javascript/methods.js");
 
 let materialNo = "TAC11181200";
 // do it blind
-function firstTest() {
+function getBeforeTest() {
   let getFiles = new ReadAndWrite();
   let { getOutput, getHK, getBD } = getFiles.init();
   beforeTest(getHK);
-  let test_filter = _.filter(getHK, { materialNo: "TAC11181200" });
-  // console.debug("TEST", test_filter);
 }
-firstTest();
+getBeforeTest();
+
+function getAfterTest() {
+  let getFiles = new ReadAndWrite();
+  let { getOutput, getHK, getBD } = getFiles.init();
+  let getFiles2 = new ReadAndWrite();
+  afterTest(getHK, getFiles2.getHK, getBD);
+}
+getAfterTest();
 // let reassignedHK2 = reassignKeys(hkFile, "hk");
-// afterTest(reassignedHK, reassignedHK2, reassignedBD);
 
 function alwaysRunThisTest() {
   let getFiles = new ReadAndWrite();
