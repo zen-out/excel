@@ -16,7 +16,8 @@ let materialNo = "TAC11181200";
 function getBeforeTest() {
   let getFiles = new ReadAndWrite();
   let { getOutput, getHK, getBD } = getFiles.init();
-  beforeTest(getHK);
+  markAfters(getHK, getBD);
+  // beforeTest(getHK);
 }
 getBeforeTest();
 
@@ -26,7 +27,7 @@ function getAfterTest() {
   let getFiles2 = new ReadAndWrite();
   afterTest(getHK, getFiles2.getHK, getBD);
 }
-getAfterTest();
+// getAfterTest();
 // let reassignedHK2 = reassignKeys(hkFile, "hk");
 
 function alwaysRunThisTest() {

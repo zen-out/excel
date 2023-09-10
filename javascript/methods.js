@@ -55,8 +55,9 @@ function markBefores(hk, bd, test) {
     }
   }
 
+  hk = _.orderBy(hk, ["materialNo"], ["asc"]);
+
   console.log(hk, "hk");
-  hk = _.orderBy(hk, ["qty"], ["desc"]);
   bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
 }
