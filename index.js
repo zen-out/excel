@@ -16,8 +16,8 @@ let materialNo = "TAC11181200";
 function getBeforeTest() {
   let getFiles = new ReadAndWrite();
   let { getOutput, getHK, getBD } = getFiles.init();
-  markAfters(getHK, getBD);
-  // beforeTest(getHK);
+  // markAfters(getHK, getBD);
+  beforeTest(getHK);
 }
 getBeforeTest();
 

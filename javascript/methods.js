@@ -38,8 +38,6 @@ function getBeforeActualQuantity(bd, bd_filter) {
   return { airShipFlag, actualQuantity };
 }
 function markBefores(hk, bd, test) {
-  // hk = _.sortBy(hk, "qty");
-  // bd = _.sortBy(bd, "owedQty");
   for (let i = 0; i < hk.length; i++) {
     let materialNo = hk[i].materialNo;
     if (!hk[i].added) {
@@ -48,16 +46,12 @@ function markBefores(hk, bd, test) {
         bd,
         bd_filter
       );
-
       if (airShipFlag) {
         hk = getBeforeQty(hk, hk[i], bd, actualQuantity);
       }
     }
   }
-
-  hk = _.orderBy(hk, ["materialNo"], ["asc"]);
-
-  console.log(hk, "hk");
+  hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["asc", "asc"]);
   bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
 }

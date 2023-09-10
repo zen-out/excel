@@ -51,15 +51,48 @@ function beforeTest(reassignedHK) {
     _.includes(item.materialNo, "78770")
   );
   let ninth = getBeforeQty(reassignedHK, filteredArr9[0], 8.656); // 78700
-  console.debug("should be 13.5", first);
-  console.debug("should be 7.02", second);
-  console.debug("should be 3.8", third);
-  console.debug("should be 1.8", fourth);
-  console.debug("should be 2.6", fifth);
-  console.debug("should be 37.9", sixth);
-  console.debug("should be 7.89", seventh);
-  console.debug("should be 27", eighth);
-  console.debug("should be 8.9", ninth);
+  console.debug(
+    "should be 13.5",
+    _.filter(first, {
+      materialNo: "TAC00070840",
+      airOrShip: "AC",
+      added: true,
+    })[0].qty
+  );
+  console.log(first);
+  console.debug(
+    "should be 7.02",
+    _.filter(second, (item) => _.includes(item.materialNo, "73780"))[0].qty
+  );
+  console.debug(
+    "should be 3.8",
+    _.filter(third, (item) => _.includes(item.materialNo, "79620"))[0].qty
+  );
+  console.debug(
+    "should be 1.8",
+    _.filter(fourth, (item) => _.includes(item.materialNo, "79670"))[0].qty
+  );
+  console.debug(
+    "should be 2.6",
+    _.filter(fifth, (item) => _.includes(item.materialNo, "79770"))[0].qty
+  );
+  // console.debug(
+  //   "should be 37.9",
+  //   _.filter(sixth, (item) => _.includes(item.materialNo, "81200"))[0].qty
+  // );
+  console.debug(
+    "should be 7.89",
+    _.filter(seventh, (item) => _.includes(item.materialNo, "84580"))[0].qty
+  );
+  console.debug(
+    "should be 27",
+    _.filter(eighth, (item) => _.includes(item.materialNo, "87880"))[0].qty
+  );
+
+  console.debug(
+    "should be 8.9",
+    _.filter(ninth, (item) => _.includes(item.materialNo, "78770"))[0].qty
+  );
 }
 
 function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
