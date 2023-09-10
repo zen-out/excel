@@ -1,12 +1,22 @@
 const _ = require("lodash");
 const { WEIGHT_TO_ADD } = require("../variables.js");
 
-function markAsAdded(array, object) {
-  let foundIdx = _.findIndex(array, function (item) {
-    return item == object;
-  });
-  array[foundIdx].added = true;
-  return array;
+function markAsAdded(array, arrayOrObject) {
+  if (Array.isArray(arrayOrObject)) {
+    for (let i = 0; i < arrayOrObject.length; i++) {
+      let foundIdx = _.findIndex(array, function (item) {
+        return item == arrayOrObject[i];
+      });
+      array[foundIdx].added = true;
+    }
+    return array;
+  } else {
+    let foundIdx = _.findIndex(array, function (item) {
+      return item == arrayOrObject;
+    });
+    array[foundIdx].added = true;
+    return array;
+  }
 }
 function duplicateItemWithSC(hk, obj, number) {
   let index = _.findIndex(hk, obj);
@@ -17,6 +27,7 @@ function duplicateItemWithSC(hk, obj, number) {
     duplicate.airOrShip = "SC";
     if (typeof number == "number") {
       duplicate.added = true;
+      number = parseFloat(number.toFixed(2));
       duplicate.qty = number;
     } else {
       duplicate.added = false;
@@ -26,15 +37,23 @@ function duplicateItemWithSC(hk, obj, number) {
   }
   return hk;
 }
-// 70840
 
+function neverMoreThanHKQty(number, hkKg, currHKQty) {
+  let lessThanHKQty = number * hkKg;
+  if (lessThanHKQty > currHKQty) {
+    return currHKQty;
+  } else {
+    return lessThanHKQty;
+  }
+}
+// 70840
 function getBeforeQty(hk, currHK, bdActualBeforeQty) {
   // bdActualBeforeQty += WEIGHT_TO_ADD;
-  let returnQty;
+  let calculatedBeforeQty;
+  let acSheets;
   let currHKQty = currHK.qty;
   let materialNo = currHK.materialNo;
   let hkKg = currHK.kg;
-
   let filteredHK = _.filter(hk, {
     materialNo: currHK.materialNo,
     added: false,
@@ -49,10 +68,12 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
       hkKg = result.kg;
       let seeIfWhole = bdActualBeforeQty / hkKg;
       if (Number.isInteger(seeIfWhole)) {
-        returnQty = seeIfWhole;
+        acSheets = seeIfWhole;
+        calculatedBeforeQty = neverMoreThanHKQty(seeIfWhole, hkKg, currHKQty);
       } else {
         let rounded = Math.ceil(seeIfWhole);
-        returnQty = rounded * hkKg;
+        acSheets = rounded;
+        calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
       }
       markAsAdded(hk, result);
     } else {
@@ -62,23 +83,24 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
     if (currHKQty > bdActualBeforeQty) {
       let seeIfWhole = bdActualBeforeQty / hkKg;
       if (Number.isInteger(seeIfWhole)) {
-        returnQty = seeIfWhole;
+        calculatedBeforeQty = neverMoreThanHKQty(seeIfWhole, hkKg, currHKQty);
+        acSheets = seeIfWhole;
       } else {
         let rounded = Math.ceil(seeIfWhole);
-        returnQty = rounded * hkKg;
+        acSheets = rounded;
+        calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
       }
     } else {
-      returnQty = currHKQty;
+      calculatedBeforeQty = currHKQty;
     }
     markAsAdded(hk, currHK);
   }
-  return returnQty;
+  return { calculatedBeforeQty, acSheets };
 }
-
 function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
   let returnQty;
   if (!currHK) {
-    console.log("ERROR");
+    console.log("ERROR", currHK, bdActualAfterQty, "ERROR");
     return;
   }
   let currHKQty = currHK.qty;

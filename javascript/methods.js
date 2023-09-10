@@ -7,7 +7,7 @@ const {
   duplicateItemWithSC,
 } = require("./functions.js");
 
-function getBeforeQuantity(bd, bd_filter) {
+function getBeforeActualQuantity(bd, bd_filter) {
   let actualQuantity = 0;
   let airShipFlag = false;
   for (let j = 0; j < bd_filter.length; j++) {
@@ -39,16 +39,26 @@ function markBefores(hk, bd, test) {
     if (!hk[i].added) {
       let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });
-      let { airShipFlag, actualQuantity } = getBeforeQuantity(bd, bd_filter);
+      let { airShipFlag, actualQuantity } = getBeforeActualQuantity(
+        bd,
+        bd_filter
+      );
       if (airShipFlag) {
-        let getBefore = getBeforeQty(hk, hk[i], actualQuantity);
-        let otherAfters = _.filter(bd_filter, function (item) {
-          return item.before === false && item.owedQty > 0;
-        });
-        if (otherAfters.length > 0) {
-          hk = duplicateItemWithSC(hk, hk[i], false);
+        let { calculatedBeforeQty, acSheets } = getBeforeQty(
+          hk,
+          hk[i],
+          actualQuantity
+        );
+        if (hk[i].qty > calculatedBeforeQty) {
+          let otherAfters = _.filter(bd_filter, function (item) {
+            return item.before === false && item.owedQty > 0;
+          });
+          markAsAdded(bd, otherAfters);
+          let scQty = hk[i].qty - calculatedBeforeQty;
+          hk[i].remarks = `拆${acSheets}条空运其余船运`;
+          hk = duplicateItemWithSC(hk, hk[i], scQty);
         }
-        hk[i].qty = getBefore;
+        hk[i].qty = calculatedBeforeQty;
         hk[i].airOrShip = "AC";
         markAsAdded(hk, hk[i]);
       }

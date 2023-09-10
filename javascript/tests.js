@@ -56,7 +56,7 @@ function beforeTest(reassignedHK) {
   console.log("should be 3.8", third);
   console.log("should be 1.8", fourth);
   console.log("should be 2.6", fifth);
-  console.log("should be 38", sixth);
+  console.log("should be 37.9", sixth);
   console.log("should be 7.89", seventh);
   console.log("should be 27", eighth);
   console.log("should be 8.9", ninth);

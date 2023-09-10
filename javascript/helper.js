@@ -7,6 +7,9 @@ const {
   WEIGHT_TO_ADD,
   TEMPLATE_FILE,
 } = require("../VARIABLES.JS");
+
+// TO DO
+// create a function that returns chinese
 function readFile(file) {
   let returnData = [];
   const data = reader.readFile(file);
