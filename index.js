@@ -58,27 +58,34 @@ function swapMonthDay(date) {
   return swappedDate;
 }
 function dates() {
-  let getFiles = new ReadAndWrite(
-    DOUBLE_CHECK_HK,
-    DOUBLE_CHECK_BD,
-    DOUBLE_CHECK_OUTPUT
-  );
+  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
   let bd = getFiles.getBD();
   // let getBD = getFiles.reassignKeys(bd);
   let filtered = _.filter(bd, (obj) =>
-    _.includes(obj["Material number"], "TAC00000430")
+    _.includes(obj["Material number"], "TAC11181440")
   );
-  console.log(filtered[0]);
-  let ogDate = filtered[0]["Date of issue"];
+  let item = filtered[2];
+  let ogDate = item["Date of issue"];
   // console.log(ogDate);
   let getDate = integerToDate(ogDate);
-  console.log(getDate);
-  let getDate2 = getFiles.convertToDate(ogDate);
-  console.log(getDate2);
-  let swap = swapMonthDay(getDate2);
-  console.log("should be oct 1", swap);
+  console.log("original", getDate);
+  // let getDate2 = getFiles.convertToDate(ogDate);
+  // console.log(getDate2);
+  let swap = swapMonthDay(getDate);
+  console.log("should be swapped", swap);
+  let testFunction = getFiles.convertToDate2(ogDate);
+  console.log("should be the same", testFunction);
 }
-// dates();
+dates();
+
+function datesTest() {
+  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
+  const { getOutput, getHK, getBD } = getFiles.init();
+  let { hk, bd } = markBefores(getHK, getBD, materialNo);
+  let getAfters = markAfters(hk, bd);
+  runTest(getOutput, getAfters.hk);
+}
+datesTest();
 
 function getAfterTest() {
   let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);

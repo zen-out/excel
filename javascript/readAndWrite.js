@@ -84,11 +84,13 @@ class ReadAndWrite {
     let value = result - 1;
     return value;
   }
-  convertToDate(stringOrNum) {
+  convertToDate2(stringOrNum) {
     let returnDate;
     if (typeof stringOrNum === "string") {
       returnDate = new Date(stringOrNum.trim());
-      return returnDate;
+      let resultDate = new Date(returnDate.getTime());
+      resultDate.setDate(returnDate.getDate() + 1);
+      return resultDate;
     } else if (typeof stringOrNum === "number") {
       const excelEpoch = new Date(1899, 11, 31);
       const excelEpochAsUnixTimestamp = excelEpoch.getTime();
@@ -104,13 +106,15 @@ class ReadAndWrite {
       return returnDate;
     }
   }
-  convertToDate2(stringOrNum) {
+  convertToDate(stringOrNum) {
     let returnDate;
     if (typeof stringOrNum === "string") {
       returnDate = new Date(stringOrNum.trim());
-      return returnDate;
+      let resultDate = new Date(returnDate.getTime());
+      resultDate.setDate(returnDate.getDate() + 1);
+      return resultDate;
     } else if (typeof stringOrNum === "number") {
-      if (WEIRD_DATES) {
+      if (!WEIRD_DATES) {
         const excelEpoch = new Date(1899, 11, 31);
         const excelEpochAsUnixTimestamp = excelEpoch.getTime();
         const millisecondsPerDay = 24 * 60 * 60 * 1000;
@@ -127,14 +131,13 @@ class ReadAndWrite {
         returnDate = new Date(
           excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
         );
-        let newDate = new Date(returnDate);
-        console.log(newDate);
-        let month = newDate.getUTCMonth() + 1; // getMonth() returns month index starting from 0
-        let day = newDate.getUTCDate();
-        let year = newDate.getUTCFullYear();
-        let hours = newDate.getUTCHours();
-        let minutes = newDate.getUTCMinutes();
-        let seconds = newDate.getUTCSeconds();
+        // let newDate = new Date(returnDate);
+        let month = returnDate.getUTCMonth() + 1; // getMonth() returns month index starting from 0
+        let day = returnDate.getUTCDate();
+        let year = returnDate.getUTCFullYear();
+        let hours = returnDate.getUTCHours();
+        let minutes = returnDate.getUTCMinutes();
+        let seconds = returnDate.getUTCSeconds();
         let swappedDate = new Date(
           Date.UTC(year, day - 1, month, hours, minutes, seconds)
         );
