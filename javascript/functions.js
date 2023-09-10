@@ -10,6 +10,13 @@ function markBDAdded(array, arrayOrObject) {
       array[foundIdx].added = true;
     }
     return array;
+  } else if (typeof arrayOrObject == "string") {
+    // console.log(array, "hey");
+    // for (let i = 0; i < array.length; i++) {
+    //   if (array[i].materialNo == arrayOrObject) {
+    //     array[i].added = true;
+    //   }
+    // }
   } else {
     let foundIdx = _.findIndex(array, function (item) {
       return item == arrayOrObject;
@@ -71,48 +78,27 @@ function neverMoreThanHKQty(number, hkKg, currHKQty) {
     return lessThanHKQty;
   }
 }
-// 70840
-function markAsAdded(array, arrayOrObject, addAC) {
-  try {
-    if (Array.isArray(arrayOrObject)) {
-      for (let i = 0; i < arrayOrObject.length; i++) {
-        let foundIdx = _.findIndex(array, function (item) {
-          return item == arrayOrObject[i];
-        });
-        if (foundIdx > -1) {
-          array[foundIdx].added = true;
-        }
-      }
-      return array;
-    } else {
-      let foundIdx = _.findIndex(array, function (item) {
-        return item == arrayOrObject;
-      });
-      array[foundIdx].added = true;
-      if (addAC) {
-        array[foundIdx].airOrShip = "AC";
-      }
-      return array;
-    }
-  } catch (error) {
-    console.debug(arrayOrObject, "errorr");
-  }
-}
 function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
   if (hkObject.qty > calculatedBefore) {
-    let otherAfters = _.filter(bd, function (item) {
+    let otherBDs = _.filter(bd, function (item) {
       return (
         item.before === false &&
         item.owedQty > 0 &&
         item.materialNo == hkObject.materialNo
       );
     });
-    markBDAdded(bd, otherAfters);
+    let otherHKs = _.filter(hk, function (item) {
+      return (
+        item.materialNo === hkObject.materialNo && !_.isEqual(item, hkObject)
+      );
+    });
+    hk = markHKAdded(hk, otherHKs);
+    bd = markBDAdded(bd, otherBDs);
     let scQty = hkObject.qty - calculatedBefore;
     hkObject.remarks = `拆${acSheets}条空运其余船运`;
     hk = duplicateItemWithSC(hk, hkObject, scQty);
   }
-  return hk;
+  return { hk, bd };
 }
 function getBeforeQty(hk, currHK, bd, bdActualBeforeQty) {
   // bdActualBeforeQty += WEIGHT_TO_ADD;
@@ -131,7 +117,6 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty) {
       return item.qty > bdActualBeforeQty;
     });
 
-    // console.log(result, "result");
     if (result) {
       currHKQty = result.qty;
       hkKg = result.kg;
@@ -162,7 +147,16 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty) {
     } else {
       calculatedBeforeQty = currHKQty;
     }
-    hk = shouldDuplicate(hk, currHK, bd, calculatedBeforeQty, acSheets);
+
+    let getDuplicates = shouldDuplicate(
+      hk,
+      currHK,
+      bd,
+      calculatedBeforeQty,
+      acSheets
+    );
+    hk = getDuplicates.hk;
+    bd = getDuplicates.bd;
     hk = markHKAdded(hk, currHK, true, calculatedBeforeQty);
   }
   if (!acSheets) {
@@ -170,39 +164,8 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty) {
   }
   return hk;
 }
-function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
+function getAfterQty(hk, currHK) {
   let returnQty;
-  if (!currHK) {
-    console.debug("ERROR", currHK, bdActualAfterQty, "ERROR");
-    return;
-  }
-  let currHKQty = currHK.qty;
-  let hkKg = currHK.kg;
-  let materialNo = currHK.materialNo;
-  let filteredHK = _.filter(hk, {
-    materialNo: materialNo,
-    added: true,
-  });
-  if (filteredHK.length) {
-    let totalBefore = _.sumBy(filteredHK, "qty");
-    let checkNegative = currHKQty - totalBefore;
-    if (checkNegative > 0) {
-      returnQty = currHKQty - totalBefore;
-    } else {
-      returnQty = currHKQty;
-    }
-  } else {
-    returnQty = currHKQty;
-  }
-  return returnQty;
-}
-
-function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
-  let returnQty;
-  if (!currHK) {
-    console.debug("ERROR", currHK, bdActualAfterQty, "ERROR");
-    return;
-  }
   let currHKQty = currHK.qty;
   let hkKg = currHK.kg;
   let materialNo = currHK.materialNo;
@@ -234,7 +197,7 @@ function getAfterQtyPartTwo(og_hk, edited_hk, test) {
 }
 
 module.exports = {
-  getAfterQtyPartOne,
+  getAfterQty,
   getAfterQtyPartTwo,
   markHKAdded,
   // getBeforeCalculatedQuantity,

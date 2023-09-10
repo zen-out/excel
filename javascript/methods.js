@@ -2,7 +2,7 @@ const _ = require("lodash");
 const {
   getBeforeQty,
   getBeforeCalculatedQuantity,
-  getAfterQtyPartOne,
+  getAfterQty,
   getAfterQtyPartTwo,
   markBDAdded,
   markHKAdded,
@@ -51,6 +51,7 @@ function markBefores(hk, bd, test) {
       }
     }
   }
+
   hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["asc", "asc"]);
   bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
@@ -62,30 +63,26 @@ function markAfters(hk, bd, test) {
       let actualQuantity = 0;
       let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });
-      let splitOccured = false;
-      let seaShipFlag = false;
-      // Loop through filtered bd
+
       for (let j = 0; j < bd_filter.length; j++) {
         let currBD = bd_filter[j];
         if (!currBD.added) {
           if (!currBD.before) {
             if (currBD.owedQty != 0) {
               actualQuantity += currBD.owedQty;
-              seaShipFlag = true;
               markBDAdded(bd, currBD);
             }
           }
         }
       }
 
-      if (seaShipFlag) {
-        let getAfter = getAfterQtyPartOne(hk, hk[i], actualQuantity);
-        hk[i].airOrShip = "SC";
-        if (hk[i].qty < hk[i].kg) {
-          hk[i].qty = hk[i].kg;
-        }
-        markHKAdded(hk, hk[i]);
+      let getAfter = getAfterQty(hk, hk[i], actualQuantity);
+      // console.log(getAfter, materialNo);
+      hk[i].airOrShip = "SC";
+      if (hk[i].qty < hk[i].kg) {
+        hk[i].qty = hk[i].kg;
       }
+      markHKAdded(hk, hk[i]);
     }
   }
 
