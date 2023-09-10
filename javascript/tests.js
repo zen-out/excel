@@ -5,6 +5,8 @@ const {
   getAfterQtyPartTwo,
 } = require("./functions.js");
 const { markBefores } = require("./methods");
+const { ReadAndWrite } = require("./readAndWrite.js");
+
 function beforeTest(reassignedHK) {
   let filteredArr = _.filter(reassignedHK, (item) =>
     _.includes(item.materialNo, "70840")
@@ -184,6 +186,21 @@ function afterTest(reassignedHK, reassignedHK2, reassignedBD) {
   */
 }
 
+function additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bdAfter) {
+  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
+  const { getOutput, getHK, getBD } = getFiles.init();
+  let beforeBD = _.filter(getBD, { before: true, added: false });
+  // console.log(bdBefore, "bd");
+  let afterBD = _.filter(bdAfter, { before: true, added: true });
+  if (beforeBD.length !== afterBD.length) {
+    // console.log(beforeBD[0]);
+    let difference = _.differenceWith(beforeBD, afterBD, _.isEqual);
+    console.log("*** FAILED length test bd ***");
+  } else {
+    console.log("*** bd length test passed ***");
+    console.log("");
+  }
+}
 function runTest(reassignedOutput, hkOutput) {
   console.debug("");
   console.debug("*** TEST ***");
@@ -209,6 +226,6 @@ function runTest(reassignedOutput, hkOutput) {
   console.debug("");
 }
 
-module.exports = { runTest, beforeTest, afterTest };
+module.exports = { additionalLengthTest, runTest, beforeTest, afterTest };
 
 // remove
