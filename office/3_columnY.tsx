@@ -47,7 +47,7 @@ function main(
     // does this row's material number (column AA) contain column D from HK? 
     if (inputArray.includes(materialNumber)) {
       // 
-      // console.log(`Material number: ${materialNumber}`);
+      // console.debug(`Material number: ${materialNumber}`);
       let serialIssueDate: number = yColumn[i][0] as number;
       let dateOfIssue: Date = getDate(serialIssueDate);
       let owedQuantity: number = parseFloat(asColumn[i][0].toString().trim());
@@ -89,8 +89,8 @@ function main(
   }
 
   let resultArray = Object.values(resultObject);
-  console.log(`beforeSum: ${resultArray[0].beforeSum}`);
-  console.log(`afterSum: ${resultArray[0].afterSum}`);
+  console.debug(`beforeSum: ${resultArray[0].beforeSum}`);
+  console.debug(`afterSum: ${resultArray[0].afterSum}`);
   return resultArray;
 
   // return resultArray;

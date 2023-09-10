@@ -1,7 +1,7 @@
 const _ = require("lodash");
-const { WEIGHT_TO_ADD } = require("../variables.js");
+const { WEIGHT_TO_ADD } = require("./variables.js");
 
-function markAsAdded(array, arrayOrObject) {
+function markAsAdded(array, arrayOrObject, addAC) {
   if (Array.isArray(arrayOrObject)) {
     for (let i = 0; i < arrayOrObject.length; i++) {
       let foundIdx = _.findIndex(array, function (item) {
@@ -15,6 +15,9 @@ function markAsAdded(array, arrayOrObject) {
       return item == arrayOrObject;
     });
     array[foundIdx].added = true;
+    if (addAC) {
+      array[foundIdx].airOrShip = "AC";
+    }
     return array;
   }
 }
@@ -75,7 +78,8 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
         acSheets = rounded;
         calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
       }
-      markAsAdded(hk, result);
+
+      markAsAdded(hk, result, true);
     } else {
       // lol
     }
@@ -100,7 +104,7 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
 function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
   let returnQty;
   if (!currHK) {
-    console.log("ERROR", currHK, bdActualAfterQty, "ERROR");
+    console.debug("ERROR", currHK, bdActualAfterQty, "ERROR");
     return;
   }
   let currHKQty = currHK.qty;
@@ -110,10 +114,10 @@ function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
     materialNo: materialNo,
     added: true,
   });
-  // console.log(filteredHK);
+  // console.debug(filteredHK);
   if (filteredHK.length) {
     let totalBefore = _.sumBy(filteredHK, "qty");
-    // console.log(bdActualAfterQty);
+    // console.debug(bdActualAfterQty);
     let checkNegative = currHKQty - totalBefore;
     if (checkNegative > 0) {
       returnQty = currHKQty - totalBefore;
@@ -123,8 +127,8 @@ function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
 
     // console purposes
     if (materialNo.includes("70840")) {
-      // console.log(totalBefore, " should be 13.5");
-      // console.log(returnQty, " should be 18.4");
+      // console.debug(totalBefore, " should be 13.5");
+      // console.debug(returnQty, " should be 18.4");
     }
   } else {
     returnQty = currHKQty;
@@ -140,7 +144,7 @@ function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
 }
 
 function getAfterQtyPartTwo(og_hk, edited_hk, test) {
-  // console.log(og_hk);
+  // console.debug(og_hk);
   let og = _.filter(og_hk, { materialNo: test });
   let hk = _.filter(edited_hk, { materialNo: test });
   let get_first = og[0].qty;

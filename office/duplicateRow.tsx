@@ -7,7 +7,7 @@ function main(workbook: ExcelScript.Workbook) {
   const valuesToCopy = rangeToCopy.getValues();
   let getD = getLetterPosition("D");
   valuesToCopy[0][getD] = "kam";
-  console.log(valuesToCopy);
+  console.debug(valuesToCopy);
   const newRange = sheet.getRange(`A${row}:N${row}`);  // get the new row
   newRange.setValues(valuesToCopy);
 }

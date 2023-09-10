@@ -1,11 +1,13 @@
+console.debug("");
+console.debug("********************* RUN *********************");
+console.debug("");
+const { HK_FILE, BD_FILE, ANSWERS_FILE } = require("./javascript/variables.js");
 const _ = require("lodash");
 const {
   readFile,
   createFile,
   reassignKeys,
 } = require("./javascript/helper.js");
-const HK_FILE = "hkFile.xlsx";
-const BD_FILE = "bdFile.xlsx";
 const { beforeTest, runTest, afterTest } = require("./javascript/tests.js");
 const {
   getBeforeQty,
@@ -13,26 +15,31 @@ const {
   getAfterQtyPartTwo,
 } = require("./javascript/functions.js");
 const { markBefores, markAfters } = require("./javascript/methods.js");
-const hkFile = readFile(`./data/${HK_FILE}`);
-const bdFile = readFile(`./data/${BD_FILE}`);
-const actualOutput = readFile(`./data/originalOutput.xlsx`);
-// let reassignedOutput = reassignKeys(actualOutput, "hk");
-// let reassignedHK = reassignKeys(hkFile, "hk");
-// let reassignedBD = reassignKeys(bdFile, "bd");
+const hkFile = readFile(HK_FILE);
+const bdFile = readFile(BD_FILE);
+const actualOutput = readFile(ANSWERS_FILE);
+function helperTest() {
+  let getOutput = reassignKeys(actualOutput, "hk");
+  let getHK = reassignKeys(hkFile, "hk");
+  let getBD = reassignKeys(bdFile, "bd");
+  return { getOutput, getHK, getBD };
+}
+
 let materialNo = "TAC11181200";
 // do it blind
-
-let reassignedHK2 = reassignKeys(hkFile, "hk");
-// beforeTest(reassignedHK);
+function firstTest() {
+  let { getOutput, getHK, getBD } = helperTest();
+  beforeTest(getHK);
+  let test_filter = _.filter(getHK, { materialNo: "TAC11181200" });
+  // console.debug("TEST", test_filter);
+}
+// firstTest();
+// let reassignedHK2 = reassignKeys(hkFile, "hk");
 // afterTest(reassignedHK, reassignedHK2, reassignedBD);
 
-function testOne() {
-  let newHK = reassignKeys(hkFile, "hk");
-
-  let newBD = reassignKeys(bdFile, "bd");
-  // console.log(newBD);
-  let newOutput = reassignKeys(actualOutput, "hk");
-  let { hk, bd } = markBefores(newHK, newBD, materialNo);
-  runTest(newOutput, hk);
+function alwaysRunThisTest() {
+  let { getOutput, getHK, getBD } = helperTest();
+  let { hk, bd } = markBefores(getHK, getBD, materialNo);
+  runTest(getOutput, hk);
 }
-testOne();
+alwaysRunThisTest();

@@ -5,8 +5,8 @@ const {
   DAYS_TO_ADD,
   OUTPUT_FILE,
   WEIGHT_TO_ADD,
-  TEMPLATE_FILE,
-} = require("../VARIABLES.JS");
+  CURRENT_DATE,
+} = require("./variables.js");
 
 // TO DO
 // create a function that returns chinese
@@ -139,7 +139,7 @@ function reassignKeys(data, type) {
       if (key.toLowerCase().includes("date of issue")) {
         let dateOfIssue = convertToDate(obj[key]);
         obj[key] = dateOfIssue;
-        let beforeOrAfter = getNextWedAndDays(new Date("2023-09-01"));
+        let beforeOrAfter = getNextWedAndDays(CURRENT_DATE);
         if (beforeOrAfter > dateOfIssue) {
           newObj["before"] = true;
         } else {

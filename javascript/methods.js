@@ -36,8 +36,11 @@ function getBeforeActualQuantity(bd, bd_filter) {
 }
 function markBefores(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
+    let materialNo = hk[i].materialNo;
+    if (materialNo.includes("81200")) {
+      console.debug("81200 HK", hk[i], i, !hk[i].added);
+    }
     if (!hk[i].added) {
-      let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });
       let { airShipFlag, actualQuantity } = getBeforeActualQuantity(
         bd,
@@ -60,10 +63,8 @@ function markBefores(hk, bd, test) {
         }
         hk[i].qty = calculatedBeforeQty;
         hk[i].airOrShip = "AC";
-        markAsAdded(hk, hk[i]);
       }
       if (test == materialNo) {
-        // console.log(hk[i], "each one");
       }
     }
   }
@@ -75,7 +76,6 @@ function markBefores(hk, bd, test) {
 function markAfters(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
     if (!hk[i].added) {
-      console.log(hk[i]);
       let actualQuantity = 0;
       let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });

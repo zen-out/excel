@@ -24,7 +24,7 @@ function main(
     // if the getItemNumbers includes the cell, then grab the beforeSum
     if (getItemNumbers.includes(itemNumber)) {
       let matchingObject = inputArray.find(item => item.key === itemNumber);
-      console.log(matchingObject, "here")
+      console.debug(matchingObject, "here")
       let beforeSum = matchingObject ? matchingObject.beforeSum : null;
       let afterSum = matchingObject ? matchingObject.afterSum : null;
       let qty: number = hColumn[i][0] as number;
@@ -47,7 +47,7 @@ function main(
         let getH = getLetterPosition("H");
         scQty = qty - beforeSum;
         valuesToCopy[0][getH] = scQty; 
-        console.log(valuesToCopy);
+        console.debug(valuesToCopy);
         const newRange = sheet.getRange(`A${getRow}:N${getRow}`);  // get the new row
         newRange.setValues(valuesToCopy);
       
