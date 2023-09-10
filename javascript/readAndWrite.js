@@ -84,28 +84,6 @@ class ReadAndWrite {
     let value = result - 1;
     return value;
   }
-  convertToDate2(stringOrNum) {
-    let returnDate;
-    if (typeof stringOrNum === "string") {
-      returnDate = new Date(stringOrNum.trim());
-      let resultDate = new Date(returnDate.getTime());
-      resultDate.setDate(returnDate.getDate() + 1);
-      return resultDate;
-    } else if (typeof stringOrNum === "number") {
-      const excelEpoch = new Date(1899, 11, 31);
-      const excelEpochAsUnixTimestamp = excelEpoch.getTime();
-      const millisecondsPerDay = 24 * 60 * 60 * 1000;
-      returnDate = new Date(
-        excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
-      );
-      let resultDate = new Date(returnDate.getTime());
-      resultDate.setDate(returnDate.getDate() + 1);
-      return resultDate;
-    } else {
-      returnDate = null;
-      return returnDate;
-    }
-  }
   convertToDate(stringOrNum) {
     let returnDate;
     if (typeof stringOrNum === "string") {

@@ -19,93 +19,7 @@ const {
   DOUBLE_CHECK_BD,
   DOUBLE_CHECK_OUTPUT,
 } = require("./javascript/variables.js");
-
-let materialNo = "TAC11181200";
-// do it blind
-// function getBeforeTest() {
-//   let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
-//   let { getOutput, getHK, getBD } = getFiles.init();
-//   // markAfters(getHK, getBD);
-//   beforeTest(getHK);
-// }
-// getBeforeTest();
-
-function integerToDate(stringOrNum) {
-  let returnDate;
-  const excelEpoch = new Date(1899, 11, 31);
-  const excelEpochAsUnixTimestamp = excelEpoch.getTime();
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  returnDate = new Date(
-    excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
-  );
-  return returnDate;
-}
-function swapMonthDay(date) {
-  let newDate = new Date(date);
-  let month = newDate.getUTCMonth() + 1; // getMonth() returns month index starting from 0
-  let day = newDate.getUTCDate();
-  let year = newDate.getUTCFullYear();
-  let hours = newDate.getUTCHours();
-  let minutes = newDate.getUTCMinutes();
-  let seconds = newDate.getUTCSeconds();
-
-  // Create a new Date object with swapped month and day
-  // Note: the month argument for the Date constructor is 0-based (0 = January)
-  let swappedDate = new Date(
-    Date.UTC(year, day - 1, month, hours, minutes, seconds)
-  );
-
-  return swappedDate;
-}
-function dates() {
-  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
-  let bd = getFiles.getBD();
-  // let getBD = getFiles.reassignKeys(bd);
-  let filtered = _.filter(bd, (obj) =>
-    _.includes(obj["Material number"], "TAC11181440")
-  );
-  let item = filtered[2];
-  let ogDate = item["Date of issue"];
-  // console.log(ogDate);
-  let getDate = integerToDate(ogDate);
-  console.log("original", getDate);
-  // let getDate2 = getFiles.convertToDate(ogDate);
-  // console.log(getDate2);
-  let swap = swapMonthDay(getDate);
-  console.log("should be swapped", swap);
-  let testFunction = getFiles.convertToDate2(ogDate);
-  console.log("should be the same", testFunction);
-}
-dates();
-
-function datesTest() {
-  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
-  const { getOutput, getHK, getBD } = getFiles.init();
-  let { hk, bd } = markBefores(getHK, getBD, materialNo);
-  let getAfters = markAfters(hk, bd);
-  runTest(getOutput, getAfters.hk);
-}
-datesTest();
-
-function getAfterTest() {
-  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
-  let { getOutput, getHK, getBD } = getFiles.init();
-  let { hk, bd } = markBefores(getHK, getBD, "test");
-  // let filteredHK = _.filter(hk, { added: false });
-  // let filteredBD = _.filter(bd, { added: false });
-  // console.log(filteredBD);
-  // console.log(filteredHK);
-  let getAfters = markAfters(hk, bd);
-  // console.log(getAfters.hk);
-
-  // let bd = cleanBD(getBefore.hk, getBefore.bd);
-
-  // let filteredBD = _.filter(bd, { added: false });
-  // console.log(filtered);
-  // console.log(filteredBD);
-}
-// getAfterTest();
-// let reassignedHK2 = reassignKeys(hkFile, "hk");
+let materialNo = "f";
 
 function additionalLengthTest(bdAfter) {
   let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
@@ -126,18 +40,11 @@ function additionalLengthTest(bdAfter) {
   }
 }
 function alwaysRunThisTest() {
-  let getFiles = new ReadAndWrite(
-    HK_FILE,
-    "./data/bd_dates.xlsx",
-    ANSWERS_FILE
-  );
+  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
   const { getOutput, getHK, getBD } = getFiles.init();
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd);
-  // console.log(getAfters.hk);
-
   runTest(getOutput, getAfters.hk);
-
   // additionalLengthTest(bd);
 }
 alwaysRunThisTest();
@@ -156,4 +63,4 @@ function doubleCheckTest() {
   runTest(getOutput, getAfters.hk);
 }
 
-// doubleCheckTest();
+doubleCheckTest();
