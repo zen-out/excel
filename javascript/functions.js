@@ -99,6 +99,9 @@ function getBeforeQty(hk, currHK, bdActualBeforeQty) {
     }
     markAsAdded(hk, currHK);
   }
+  if (!acSheets) {
+    acSheets = null;
+  }
   return { calculatedBeforeQty, acSheets };
 }
 function getAfterQtyPartOne(hk, currHK, bdActualAfterQty) {
