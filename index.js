@@ -25,7 +25,20 @@ const {
   DOUBLE_CHECK_BD,
   DOUBLE_CHECK_OUTPUT,
 } = require("./javascript/variables.js");
-let materialNo = "f";
+let materialNo = "TAC00070840";
+
+function doubleCheck() {
+  let getFiles = new ReadAndWrite(
+    DOUBLE_CHECK_HK,
+    DOUBLE_CHECK_BD,
+    DOUBLE_CHECK_OUTPUT
+  );
+  const { getOutput, getHK, getBD } = getFiles.init();
+  let { hk, bd } = markBefores(getHK, getBD, materialNo);
+
+  let getAfters = markAfters(hk, bd, materialNo);
+}
+doubleCheck();
 
 function alwaysRunThisTest() {
   let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
