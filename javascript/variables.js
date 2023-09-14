@@ -1,16 +1,16 @@
 const HK_FILE = "./data/hk_input_1.xlsx";
-const BD_FILE = "./data/bd_input_1.xlsx";
+const BD_FILE = "./data/bd_input_1_notweirddates.xlsx";
 const ANSWERS_FILE = "./data/hk_output_1.xlsx";
 const DOUBLE_CHECK_HK = "./data/hk_input_3.xlsx";
-const DOUBLE_CHECK_BD = "./data/bd_input_3.xlsx";
+const DOUBLE_CHECK_BD = "./data/bd_input_4.xlsx";
 const DOUBLE_CHECK_OUTPUT = "./data/hk_output_3.xlsx";
 const TEMPLATE_FILE = "./data/template.xlsx";
 const OUTPUT_FILE = "./data/output.xlsx";
 const DAYS_TO_ADD = 35;
-const WEIGHT_TO_ADD = 0.3;
+const WEIGHT_TO_ADD = 0;
 const CURRENT_DATE = new Date("2023-09-10");
 const CURRENT_DATE_2 = new Date("2023-09-14");
-const WEIRD_DATES = true;
+const WEIRD_DATES = false;
 
 const HK_ITEM_NUMBER = "A";
 const HK_ITEM_DESCRIPTION = "B";

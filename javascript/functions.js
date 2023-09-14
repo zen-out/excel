@@ -12,11 +12,12 @@ function markBDAdded(array, arrayOrObject) {
     return array;
   } else if (typeof arrayOrObject == "string") {
     // console.log(array, "hey");
-    // for (let i = 0; i < array.length; i++) {
-    //   if (array[i].materialNo == arrayOrObject) {
-    //     array[i].added = true;
-    //   }
-    // }
+    /*
+    for (let i = 0; i < array.length; i++) {
+      if (array[i].materialNo == arrayOrObject) {
+        array[i].added = true;
+      }
+    }*/
   } else {
     let foundIdx = _.findIndex(array, function (item) {
       return item == arrayOrObject;
@@ -100,7 +101,7 @@ function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
   }
   return { hk, bd };
 }
-function getBeforeQty(hk, currHK, bd, bdActualBeforeQty) {
+function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
   // bdActualBeforeQty += WEIGHT_TO_ADD;
   let calculatedBeforeQty;
   let acSheets;

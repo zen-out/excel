@@ -9,21 +9,25 @@ const {
   duplicateItemWithSC,
 } = require("./functions.js");
 
-function getBeforeActualQuantity(bd, bd_filter) {
+function getBeforeActualQuantity(bd, bd_filter, test) {
   let actualQuantity = 0;
   let airShipFlag = false;
   for (let j = 0; j < bd_filter.length; j++) {
     let currBD = bd_filter[j];
+    let materialNo = currBD.materialNo;
+
     if (!currBD.added) {
+      if (test == materialNo) {
+        // console.log(currBD);
+      }
       if (currBD.before) {
-        // If it has an assign max in transit date, and its date is creater than date of issue, and it's allocate in transit date is not zero
+        // If
         if (
           !isNaN(currBD.assignMaxInTransit) &&
           currBD.assignMaxInTransit > currBD.dateOfIssue &&
           currBD.allocateInTransit != 0
         ) {
           airShipFlag = true;
-          // add allocate in transit to actualQuantity
           actualQuantity = actualQuantity + currBD.allocateInTransit;
           markBDAdded(bd, currBD);
         } else if (currBD.owedQty != 0) {
@@ -42,21 +46,19 @@ function markBefores(hk, bd, test) {
     let materialNo = hk[i].materialNo;
     if (!hk[i].added) {
       let bd_filter = _.filter(bd, { materialNo: materialNo });
+
       let { airShipFlag, actualQuantity } = getBeforeActualQuantity(
         bd,
-        bd_filter
+        bd_filter,
+        test
       );
-      if (test.includes("TAC00102510")) {
-        // console.log("actual quantity", actualQuantity);
+      if (test === materialNo) {
+        // console.log(materialNo, actualQuantity);
       }
       if (airShipFlag) {
         hk = getBeforeQty(hk, hk[i], bd, actualQuantity);
       }
     }
-  }
-  if (test.includes("TAC00102510")) {
-    let filtered = _.filter(hk, { materialNo: test });
-    // console.log(filtered);
   }
   hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["asc", "asc"]);
   bd = _.orderBy(bd, ["owedQty"], ["desc"]);

@@ -1,5 +1,12 @@
 # Conversion 
 
+## Requirements
+
+- For BD: 
+1. 
+
+-- If Assign Maximum in Transit Date is later than Date of Issue, account for the allocate in transite warehouse. Otherwise, take the owed quantity. 
+
 ## Install 
 1. Go to your terminal / command prompt and 
 

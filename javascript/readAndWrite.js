@@ -60,8 +60,38 @@ class ReadAndWrite {
   getOutput() {
     return this.answerFile;
   }
-  createFile(data, outputFile) {
-    let originalKeys = this.revertKeys(data);
+  createFile(data, outputFile, optionalOutput) {
+    let originalKeys;
+    if (optionalOutput) {
+      let getHK = _.map(data, (item) =>
+        _.pick(item, [
+          "materialNo",
+          "description",
+          "qty",
+          "airOrShip",
+          "remarks",
+        ])
+      );
+      let getOutput = _.map(optionalOutput, (item) =>
+        _.pick(item, [
+          "materialNo",
+          "description",
+          "qty",
+          "airOrShip",
+          "remarks",
+        ])
+      );
+
+      let result = getHK.map((obj1) => {
+        let existsInArrayTwo = _.some(getOutput, (obj2) =>
+          _.isMatch(obj2, _.pick(obj1, ["materialNo", "qty", "airOrShip"]))
+        );
+        return { ...obj1, correct: existsInArrayTwo };
+      });
+      originalKeys = this.revertKeys(result);
+    } else {
+      originalKeys = this.revertKeys(data);
+    }
     let workbook = reader.utils.book_new();
     // Create a new worksheet from the data.
     let wscols = [
@@ -103,14 +133,25 @@ class ReadAndWrite {
     let value = result - 1;
     return value;
   }
-  convertToDate(stringOrNum) {
+  convertToDate(stringOrNum, materialNo) {
     let returnDate;
     if (typeof stringOrNum === "string") {
-      returnDate = new Date(stringOrNum.trim());
-      let resultDate = new Date(returnDate.getTime());
-      resultDate.setDate(returnDate.getDate() + 1);
-      return resultDate;
+      if (!WEIRD_DATES) {
+        returnDate = new Date(stringOrNum.trim());
+        let resultDate = new Date(returnDate.getTime());
+        resultDate.setDate(returnDate.getDate() + 1);
+        if (materialNo) {
+          // console.log("date", stringOrNum, "to", resultDate);
+        }
+        return resultDate;
+      } else {
+        returnDate = new Date(stringOrNum.trim());
+        let resultDate = new Date(returnDate.getTime());
+        resultDate.setDate(returnDate.getDate() + 1);
+        return returnDate;
+      }
     } else if (typeof stringOrNum === "number") {
+      stringOrNum = parseInt(stringOrNum);
       if (!WEIRD_DATES) {
         const excelEpoch = new Date(1899, 11, 31);
         const excelEpochAsUnixTimestamp = excelEpoch.getTime();
@@ -120,7 +161,10 @@ class ReadAndWrite {
         );
         let resultDate = new Date(returnDate.getTime());
         resultDate.setDate(returnDate.getDate() + 1);
-        return resultDate;
+        if (materialNo) {
+          // console.log("date", stringOrNum, "to", returnDate);
+        }
+        return returnDate;
       } else {
         const excelEpoch = new Date(1899, 11, 31);
         const excelEpochAsUnixTimestamp = excelEpoch.getTime();
@@ -186,17 +230,20 @@ class ReadAndWrite {
     let result = data.map((obj) => {
       let newObj = {};
       let keys = Object.keys(obj);
-
       keys.forEach((key, index) => {
         if (key.toLowerCase().includes("item description")) {
           let kg = this.getWeight(obj[key]);
           newObj["kg"] = kg;
-          // TODO: Do you need this?
           newObj["added"] = false;
         }
 
         if (key.toLowerCase().includes("date of issue")) {
-          let dateOfIssue = this.convertToDate(obj[key]);
+          let dateOfIssue;
+          if (type == "bd") {
+            dateOfIssue = this.convertToDate(obj[key], obj["Material number"]);
+          } else {
+            dateOfIssue = this.convertToDate(obj[key]);
+          }
           obj[key] = dateOfIssue;
           let beforeOrAfter = this.getNextWedAndDays(date);
           if (beforeOrAfter > dateOfIssue) {
@@ -217,7 +264,8 @@ class ReadAndWrite {
         }
 
         if (key.toLowerCase().includes("owed quantity")) {
-          let addWeight = obj[key] + WEIGHT_TO_ADD;
+          // let addWeight = obj[key] + WEIGHT_TO_ADD;
+          let addWeight = obj[key];
           obj[key] = addWeight;
         }
 
@@ -267,6 +315,27 @@ class ReadAndWrite {
       return newObj;
     });
     return newArray;
+  }
+  changeBDFile(array) {
+    let keepKeys = [
+      "dateOfIssue",
+      "materialNo",
+      "owedQty",
+      "allocateInTransit",
+      "assignMaxInTransit",
+      "materialShortageAfterInventory",
+      "before",
+    ];
+
+    array = array.map((obj) => {
+      Object.keys(obj).forEach((key) => {
+        if (!keepKeys.includes(key)) {
+          delete obj[key];
+        }
+      });
+      return obj;
+    });
+    return array;
   }
 }
 
