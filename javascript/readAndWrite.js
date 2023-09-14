@@ -3,6 +3,7 @@ const {
   OUTPUT_FILE,
   WEIGHT_TO_ADD,
   CURRENT_DATE,
+  CURRENT_DATE_2,
   WEIRD_DATES,
   HK_ITEM_NUMBER,
   HK_ITEM_DESCRIPTION,
@@ -24,11 +25,18 @@ class ReadAndWrite {
     this.bdFile = this.readFile(BD_FILE);
     this.answerFile = this.readFile(ANSWERS_FILE);
   }
-  init() {
-    let getOutput = this.reassignKeys(this.answerFile, "hk");
-    let getHK = this.reassignKeys(this.hkFile, "hk");
-    let getBD = this.reassignKeys(this.bdFile, "bd");
-    return { getOutput, getHK, getBD };
+  init(test) {
+    if (test) {
+      let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE_2);
+      let getHK = this.reassignKeys(this.hkFile, "hk", CURRENT_DATE_2);
+      let getBD = this.reassignKeys(this.bdFile, "bd", CURRENT_DATE_2);
+      return { getOutput, getHK, getBD };
+    } else {
+      let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE);
+      let getHK = this.reassignKeys(this.hkFile, "hk", CURRENT_DATE);
+      let getBD = this.reassignKeys(this.bdFile, "bd", CURRENT_DATE);
+      return { getOutput, getHK, getBD };
+    }
   }
   readFile(file) {
     let returnData = [];
@@ -145,7 +153,7 @@ class ReadAndWrite {
     resultDate.setDate(resultDate.getDate() + DAYS_TO_ADD);
     return resultDate;
   }
-  reassignKeys(data, type) {
+  reassignKeys(data, type, date) {
     let oldKeys;
     let newKeys;
     if (type == "hk") {
@@ -190,7 +198,7 @@ class ReadAndWrite {
         if (key.toLowerCase().includes("date of issue")) {
           let dateOfIssue = this.convertToDate(obj[key]);
           obj[key] = dateOfIssue;
-          let beforeOrAfter = this.getNextWedAndDays(CURRENT_DATE);
+          let beforeOrAfter = this.getNextWedAndDays(date);
           if (beforeOrAfter > dateOfIssue) {
             newObj["before"] = true;
           } else {

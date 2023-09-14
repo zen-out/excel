@@ -9,6 +9,7 @@ const OUTPUT_FILE = "./data/output.xlsx";
 const DAYS_TO_ADD = 35;
 const WEIGHT_TO_ADD = 0.3;
 const CURRENT_DATE = new Date("2023-09-10");
+const CURRENT_DATE_2 = new Date("2023-09-14");
 const WEIRD_DATES = true;
 
 const HK_ITEM_NUMBER = "A";
@@ -35,6 +36,7 @@ module.exports = {
   DOUBLE_CHECK_HK,
   DOUBLE_CHECK_BD,
   DOUBLE_CHECK_OUTPUT,
+  CURRENT_DATE_2,
   WEIRD_DATES,
   HK_ITEM_NUMBER,
   HK_ITEM_DESCRIPTION,

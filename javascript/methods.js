@@ -57,13 +57,42 @@ function markBefores(hk, bd, test) {
   return { hk, bd };
 }
 
+function getAfterActualQuantity(bd, bd_filter) {
+  let actualQuantity = 0;
+  let seaShipFlag = false;
+  for (let j = 0; j < bd_filter.length; j++) {
+    let currBD = bd_filter[j];
+    if (!currBD.added) {
+      if (!currBD.before) {
+        // If it has an assign max in transit date, and its date is creater than date of issue, and it's allocate in transit date is not zero
+        if (
+          !isNaN(currBD.assignMaxInTransit) &&
+          currBD.assignMaxInTransit > currBD.dateOfIssue &&
+          currBD.allocateInTransit != 0
+        ) {
+          seaShipFlag = true;
+          // add allocate in transit to actualQuantity
+          actualQuantity = actualQuantity + currBD.allocateInTransit;
+          markBDAdded(bd, currBD);
+        } else if (currBD.owedQty != 0) {
+          actualQuantity = actualQuantity += currBD.owedQty;
+          seaShipFlag = true;
+          markBDAdded(bd, currBD);
+        }
+      }
+    }
+  }
+
+  return { seaShipFlag, actualQuantity };
+}
+
 function markAfters(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
+    let materialNo = hk[i].materialNo;
     if (!hk[i].added) {
+      /*
       let actualQuantity = 0;
-      let materialNo = hk[i].materialNo;
       let bd_filter = _.filter(bd, { materialNo: materialNo });
-
       for (let j = 0; j < bd_filter.length; j++) {
         let currBD = bd_filter[j];
         if (!currBD.added) {
@@ -75,8 +104,17 @@ function markAfters(hk, bd, test) {
           }
         }
       }
+      */
+      let bd_filter = _.filter(bd, { materialNo: materialNo });
+      let { seaShipFlag, actualQuantity } = getAfterActualQuantity(
+        bd,
+        bd_filter
+      );
 
-      let getAfter = getAfterQty(hk, hk[i], actualQuantity);
+      // let getAfter = getAfterQty(hk, hk[i], actualQuantity);
+      if (test === "TAC00002210") {
+        console.log("here, should be 2.3", actualQuantity);
+      }
       // console.log(getAfter, materialNo);
       hk[i].airOrShip = "SC";
       if (hk[i].qty < hk[i].kg) {
