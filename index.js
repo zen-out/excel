@@ -45,7 +45,7 @@ function what() {
 
 function doubleCheckTest() {
   let problems = ["TAC00010400", "TAC00010420"];
-  let materialNo = "TAC00011410";
+  let materialNo = "TAC00012070";
   let getFiles = new ReadAndWrite(
     DOUBLE_CHECK_HK,
     DOUBLE_CHECK_BD,
@@ -78,4 +78,4 @@ function alwaysRunThisTest() {
   runTest(getOutput, getAfters.hk);
   additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
 }
-alwaysRunThisTest();
+// alwaysRunThisTest();

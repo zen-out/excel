@@ -15,11 +15,7 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
   for (let j = 0; j < bd_filter.length; j++) {
     let currBD = bd_filter[j];
     let materialNo = currBD.materialNo;
-
     if (!currBD.added) {
-      if (test == materialNo) {
-        // console.log(currBD);
-      }
       if (currBD.before) {
         // If
         if (
@@ -56,7 +52,7 @@ function markBefores(hk, bd, test) {
         // console.log(materialNo, actualQuantity);
       }
       if (airShipFlag) {
-        hk = getBeforeQty(hk, hk[i], bd, actualQuantity);
+        hk = getBeforeQty(hk, hk[i], bd, actualQuantity, test);
       }
     }
   }

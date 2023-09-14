@@ -148,7 +148,9 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
     } else {
       calculatedBeforeQty = currHKQty;
     }
-
+    if (test == materialNo) {
+      // console.log(calculatedBeforeQty);
+    }
     let getDuplicates = shouldDuplicate(
       hk,
       currHK,

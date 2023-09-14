@@ -4,7 +4,8 @@ const {
   WEIGHT_TO_ADD,
   CURRENT_DATE,
   CURRENT_DATE_2,
-  WEIRD_DATES,
+  WEIRD_DATE_OF_ISSUE,
+  WEIRD_ASSIGN_MAX_DATE,
   HK_ITEM_NUMBER,
   HK_ITEM_DESCRIPTION,
   HK_QTY,
@@ -133,16 +134,13 @@ class ReadAndWrite {
     let value = result - 1;
     return value;
   }
-  convertToDate(stringOrNum, materialNo) {
+  convertToDate(stringOrNum, weird_date) {
     let returnDate;
     if (typeof stringOrNum === "string") {
-      if (!WEIRD_DATES) {
+      if (!weird_date) {
         returnDate = new Date(stringOrNum.trim());
         let resultDate = new Date(returnDate.getTime());
         resultDate.setDate(returnDate.getDate() + 1);
-        if (materialNo) {
-          // console.log("date", stringOrNum, "to", resultDate);
-        }
         return resultDate;
       } else {
         returnDate = new Date(stringOrNum.trim());
@@ -152,7 +150,7 @@ class ReadAndWrite {
       }
     } else if (typeof stringOrNum === "number") {
       stringOrNum = parseInt(stringOrNum);
-      if (!WEIRD_DATES) {
+      if (!weird_date) {
         const excelEpoch = new Date(1899, 11, 31);
         const excelEpochAsUnixTimestamp = excelEpoch.getTime();
         const millisecondsPerDay = 24 * 60 * 60 * 1000;
@@ -161,9 +159,6 @@ class ReadAndWrite {
         );
         let resultDate = new Date(returnDate.getTime());
         resultDate.setDate(returnDate.getDate() + 1);
-        if (materialNo) {
-          // console.log("date", stringOrNum, "to", returnDate);
-        }
         return returnDate;
       } else {
         const excelEpoch = new Date(1899, 11, 31);
@@ -238,12 +233,7 @@ class ReadAndWrite {
         }
 
         if (key.toLowerCase().includes("date of issue")) {
-          let dateOfIssue;
-          if (type == "bd") {
-            dateOfIssue = this.convertToDate(obj[key], obj["Material number"]);
-          } else {
-            dateOfIssue = this.convertToDate(obj[key]);
-          }
+          let dateOfIssue = this.convertToDate(obj[key], WEIRD_DATE_OF_ISSUE);
           obj[key] = dateOfIssue;
           let beforeOrAfter = this.getNextWedAndDays(date);
           if (beforeOrAfter > dateOfIssue) {
@@ -254,7 +244,7 @@ class ReadAndWrite {
           newObj["added"] = false;
         }
         if (key.toLowerCase().includes("assign maximum in transit")) {
-          let assignMax = this.convertToDate(obj[key]);
+          let assignMax = this.convertToDate(obj[key], WEIRD_ASSIGN_MAX_DATE);
           if (isNaN(assignMax)) {
             obj[key] = " ";
           } else {

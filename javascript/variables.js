@@ -10,8 +10,8 @@ const DAYS_TO_ADD = 35;
 const WEIGHT_TO_ADD = 0;
 const CURRENT_DATE = new Date("2023-09-10");
 const CURRENT_DATE_2 = new Date("2023-09-14");
-const WEIRD_DATES = false;
-
+const WEIRD_DATE_OF_ISSUE = false;
+const WEIRD_ASSIGN_MAX_DATE = false;
 const HK_ITEM_NUMBER = "A";
 const HK_ITEM_DESCRIPTION = "B";
 const HK_QTY = "C";
@@ -27,6 +27,7 @@ const BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION = "F";
 module.exports = {
   HK_FILE,
   BD_FILE,
+  WEIRD_ASSIGN_MAX_DATE,
   ANSWERS_FILE,
   OUTPUT_FILE,
   DAYS_TO_ADD,
@@ -37,7 +38,7 @@ module.exports = {
   DOUBLE_CHECK_BD,
   DOUBLE_CHECK_OUTPUT,
   CURRENT_DATE_2,
-  WEIRD_DATES,
+  WEIRD_DATE_OF_ISSUE,
   HK_ITEM_NUMBER,
   HK_ITEM_DESCRIPTION,
   HK_QTY,
