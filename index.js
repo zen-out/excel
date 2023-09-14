@@ -31,24 +31,8 @@ const {
   DOUBLE_CHECK_OUTPUT,
 } = require("./javascript/variables.js");
 
-function whatsGoingOn() {
-  let materialNo = "TAC00002210";
-  let getFiles = new ReadAndWrite(
-    DOUBLE_CHECK_HK,
-    DOUBLE_CHECK_BD,
-    DOUBLE_CHECK_OUTPUT
-  );
-  const { getOutput, getHK, getBD } = getFiles.init(true);
-  let { hk, bd } = markBefores(getHK, getBD, materialNo);
-  console.log(bd);
-  let bd_filter = _.filter(getBD, { materialNo: materialNo });
-  console.log(bd_filter);
-  let { seaShipFlag, actualQuantity } = getAfterActualQuantity(bd, bd_filter);
-  console.log(actualQuantity);
-}
-whatsGoingOn();
 function doubleCheckTest() {
-  let materialNo = "TAC00002210";
+  let materialNo = "TAC00102510";
   let getFiles = new ReadAndWrite(
     DOUBLE_CHECK_HK,
     DOUBLE_CHECK_BD,
@@ -56,8 +40,6 @@ function doubleCheckTest() {
   );
   const { getOutput, getHK, getBD } = getFiles.init(true);
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
-  let filtered = _.filter(hk, { materialNo: materialNo });
-  console.log(filtered);
   let getAfters = markAfters(hk, bd, materialNo);
   runTest(getOutput, getAfters.hk);
   additionalLengthTest(
@@ -68,7 +50,7 @@ function doubleCheckTest() {
   );
 }
 
-// doubleCheckTest();
+doubleCheckTest();
 
 function alwaysRunThisTest() {
   let materialNo = "TAC00070840";

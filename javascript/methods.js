@@ -46,12 +46,18 @@ function markBefores(hk, bd, test) {
         bd,
         bd_filter
       );
+      if (test.includes("TAC00102510")) {
+        // console.log("actual quantity", actualQuantity);
+      }
       if (airShipFlag) {
         hk = getBeforeQty(hk, hk[i], bd, actualQuantity);
       }
     }
   }
-
+  if (test.includes("TAC00102510")) {
+    let filtered = _.filter(hk, { materialNo: test });
+    // console.log(filtered);
+  }
   hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["asc", "asc"]);
   bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
@@ -64,7 +70,6 @@ function getAfterActualQuantity(bd, bd_filter) {
     let currBD = bd_filter[j];
     if (!currBD.added) {
       if (!currBD.before) {
-        // console.log(currBD, "currBD");
         // If it has an assign max in transit date, and its date is creater than date of issue, and it's allocate in transit date is not zero
         if (currBD.owedQty != 0) {
           actualQuantity += currBD.owedQty;
@@ -73,13 +78,10 @@ function getAfterActualQuantity(bd, bd_filter) {
         }
       }
     }
-
-    // console.log("actual ", actualQuantity);
   }
 
   return { seaShipFlag, actualQuantity };
 }
-let hasLogged = false;
 
 function markAfters(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
@@ -92,11 +94,8 @@ function markAfters(hk, bd, test) {
       );
 
       // let getAfter = getAfterQty(hk, hk[i], actualQuantity);
-      if (test === "TAC00002210" && !hasLogged) {
-        console.log("ACTUAL", actualQuantity);
-        hasLogged = true;
+      if (test === "TAC00002210") {
       }
-      // console.log(getAfter, materialNo);
       hk[i].airOrShip = "SC";
       if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;

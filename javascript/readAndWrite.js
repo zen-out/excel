@@ -60,8 +60,8 @@ class ReadAndWrite {
   getOutput() {
     return this.answerFile;
   }
-  createFile(data) {
-    let originalKeys = revertKeys(data);
+  createFile(data, outputFile) {
+    let originalKeys = this.revertKeys(data);
     let workbook = reader.utils.book_new();
     // Create a new worksheet from the data.
     let wscols = [
@@ -76,7 +76,7 @@ class ReadAndWrite {
     // Add the worksheet to the workbook.
     reader.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     // Write the workbook to a new Excel file.
-    reader.writeFile(workbook, `./data/${OUTPUT_FILE}`, {
+    reader.writeFile(workbook, `./data/${outputFile}`, {
       bookType: "xlsx",
       type: "binary",
     });
@@ -189,16 +189,14 @@ class ReadAndWrite {
 
       keys.forEach((key, index) => {
         if (key.toLowerCase().includes("item description")) {
-          let trimmed = this.trim(obj[key]);
-          let kg = this.getWeight(trimmed);
+          let kg = this.getWeight(obj[key]);
           newObj["kg"] = kg;
           // TODO: Do you need this?
           newObj["added"] = false;
         }
 
         if (key.toLowerCase().includes("date of issue")) {
-          let trimmed = this.trim(obj[key]);
-          let dateOfIssue = this.convertToDate(trimmed);
+          let dateOfIssue = this.convertToDate(obj[key]);
           obj[key] = dateOfIssue;
           let beforeOrAfter = this.getNextWedAndDays(date);
           if (beforeOrAfter > dateOfIssue) {
@@ -209,8 +207,7 @@ class ReadAndWrite {
           newObj["added"] = false;
         }
         if (key.toLowerCase().includes("assign maximum in transit")) {
-          let trimmed = this.trim(obj[key]);
-          let assignMax = this.convertToDate(trimmed);
+          let assignMax = this.convertToDate(obj[key]);
           if (isNaN(assignMax)) {
             obj[key] = " ";
           } else {
@@ -226,14 +223,21 @@ class ReadAndWrite {
 
         let keyIndex = oldKeys.indexOf(index);
         if (keyIndex > -1) {
-          newObj[newKeys[keyIndex]] = this.trim(obj[key]);
+          newObj[newKeys[keyIndex]] = obj[key];
         } else {
           // Otherwise, use the old key
-          newObj[key] = this.trim(obj[key]);
+          newObj[key] = obj[key];
         }
       });
 
       return newObj;
+    });
+    result = result.map((obj) => {
+      if (obj.materialNo && typeof obj.materialNo === "string") {
+        return { ...obj, materialNo: obj.materialNo.trim() };
+      } else {
+        return obj;
+      }
     });
     return result;
   }
