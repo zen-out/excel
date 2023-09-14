@@ -58,7 +58,7 @@ function doubleCheckTest() {
   );
   const { getOutput, getHK, getBD } = getFiles.init();
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
-  let getAfters = markAfters(hk, bd);
+  let getAfters = markAfters(hk, bd, materialNo);
   runTest(getOutput, getAfters.hk);
   additionalLengthTest(
     DOUBLE_CHECK_HK,
