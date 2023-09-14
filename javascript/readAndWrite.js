@@ -189,14 +189,16 @@ class ReadAndWrite {
 
       keys.forEach((key, index) => {
         if (key.toLowerCase().includes("item description")) {
-          let kg = this.getWeight(obj[key]);
+          let trimmed = this.trim(obj[key]);
+          let kg = this.getWeight(trimmed);
           newObj["kg"] = kg;
           // TODO: Do you need this?
           newObj["added"] = false;
         }
 
         if (key.toLowerCase().includes("date of issue")) {
-          let dateOfIssue = this.convertToDate(obj[key]);
+          let trimmed = this.trim(obj[key]);
+          let dateOfIssue = this.convertToDate(trimmed);
           obj[key] = dateOfIssue;
           let beforeOrAfter = this.getNextWedAndDays(date);
           if (beforeOrAfter > dateOfIssue) {
@@ -207,7 +209,8 @@ class ReadAndWrite {
           newObj["added"] = false;
         }
         if (key.toLowerCase().includes("assign maximum in transit")) {
-          let assignMax = this.convertToDate(obj[key]);
+          let trimmed = this.trim(obj[key]);
+          let assignMax = this.convertToDate(trimmed);
           if (isNaN(assignMax)) {
             obj[key] = " ";
           } else {
@@ -223,17 +226,23 @@ class ReadAndWrite {
 
         let keyIndex = oldKeys.indexOf(index);
         if (keyIndex > -1) {
-          // If it's one of the keys to be changed, use the new key
-          newObj[newKeys[keyIndex]] = obj[key];
+          newObj[newKeys[keyIndex]] = this.trim(obj[key]);
         } else {
           // Otherwise, use the old key
-          newObj[key] = obj[key];
+          newObj[key] = this.trim(obj[key]);
         }
       });
 
       return newObj;
     });
     return result;
+  }
+  trim(value) {
+    if (typeof value === "number") {
+      return value;
+    } else if (typeof value === "string") {
+      return value.trim();
+    }
   }
   revertKeys(array) {
     let newArray = array.map((obj) => {

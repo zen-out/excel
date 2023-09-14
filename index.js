@@ -11,10 +11,15 @@ const {
 const {
   getBeforeQty,
   getAfterQty,
+
   getAfterQtyPartTwo,
   markBDAdded,
 } = require("./javascript/functions.js");
-const { markBefores, markAfters } = require("./javascript/methods.js");
+const {
+  markBefores,
+  markAfters,
+  getAfterActualQuantity,
+} = require("./javascript/methods.js");
 
 const { ReadAndWrite } = require("./javascript/readAndWrite.js");
 const {
@@ -26,6 +31,22 @@ const {
   DOUBLE_CHECK_OUTPUT,
 } = require("./javascript/variables.js");
 
+function whatsGoingOn() {
+  let materialNo = "TAC00002210";
+  let getFiles = new ReadAndWrite(
+    DOUBLE_CHECK_HK,
+    DOUBLE_CHECK_BD,
+    DOUBLE_CHECK_OUTPUT
+  );
+  const { getOutput, getHK, getBD } = getFiles.init(true);
+  let { hk, bd } = markBefores(getHK, getBD, materialNo);
+  console.log(bd);
+  let bd_filter = _.filter(getBD, { materialNo: materialNo });
+  console.log(bd_filter);
+  let { seaShipFlag, actualQuantity } = getAfterActualQuantity(bd, bd_filter);
+  console.log(actualQuantity);
+}
+whatsGoingOn();
 function doubleCheckTest() {
   let materialNo = "TAC00002210";
   let getFiles = new ReadAndWrite(
@@ -47,7 +68,7 @@ function doubleCheckTest() {
   );
 }
 
-doubleCheckTest();
+// doubleCheckTest();
 
 function alwaysRunThisTest() {
   let materialNo = "TAC00070840";
