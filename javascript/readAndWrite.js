@@ -4,6 +4,17 @@ const {
   WEIGHT_TO_ADD,
   CURRENT_DATE,
   WEIRD_DATES,
+  HK_ITEM_NUMBER,
+  HK_ITEM_DESCRIPTION,
+  HK_QTY,
+  HK_ACORSC,
+  HK_REMARKS,
+  BD_DATE_OF_ISSUE,
+  BD_MATERIAL_NUMBER,
+  BD_OWED_QUANTITY,
+  BD_ALLOCATE_IN_TRANSITE_WAREHOUSE,
+  BD_ASSIGN_MAX_IN_TRANSIT_DATE,
+  BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION,
 } = require("./variables.js");
 const _ = require("lodash");
 const reader = require("xlsx");
@@ -139,21 +150,21 @@ class ReadAndWrite {
     let newKeys;
     if (type == "hk") {
       oldKeys = [
-        this.getLetterPosition("A"),
-        this.getLetterPosition("B"),
-        this.getLetterPosition("C"),
-        this.getLetterPosition("D"),
-        this.getLetterPosition("E"),
+        this.getLetterPosition(HK_ITEM_NUMBER),
+        this.getLetterPosition(HK_ITEM_DESCRIPTION),
+        this.getLetterPosition(HK_QTY),
+        this.getLetterPosition(HK_ACORSC),
+        this.getLetterPosition(HK_REMARKS),
       ];
       newKeys = ["materialNo", "description", "qty", "airOrShip", "remarks"];
     } else {
       oldKeys = [
-        this.getLetterPosition("A"),
-        this.getLetterPosition("B"),
-        this.getLetterPosition("C"),
-        this.getLetterPosition("D"),
-        this.getLetterPosition("E"),
-        this.getLetterPosition("F"),
+        this.getLetterPosition(BD_DATE_OF_ISSUE),
+        this.getLetterPosition(BD_MATERIAL_NUMBER),
+        this.getLetterPosition(BD_OWED_QUANTITY),
+        this.getLetterPosition(BD_ALLOCATE_IN_TRANSITE_WAREHOUSE),
+        this.getLetterPosition(BD_ASSIGN_MAX_IN_TRANSIT_DATE),
+        this.getLetterPosition(BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION),
       ];
       newKeys = [
         "dateOfIssue",
