@@ -321,10 +321,10 @@ class ReadAndWrite {
         "allocateInTransit",
         "assignMaxInTransit",
         "materialShortageAfterInventory",
-        "before",
+        "before", 
       ];
     } else {
-      keepKeys = ["materialNo", "description", "qty", "airOrShip", "remarks"];
+      keepKeys = ["materialNo", "description", "qty", "airOrShip", "remarks", "kg"];
     }
 
     array = array.map((obj) => {
