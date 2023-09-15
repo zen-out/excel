@@ -4,7 +4,7 @@ const { WEIGHT_TO_ADD } = require("./variables.js");
 function markBDAdded(array, arrayOrObject) {
   if (Array.isArray(arrayOrObject)) {
     for (let i = 0; i < arrayOrObject.length; i++) {
-      let foundIdx = _.findIndex(array, function (item) {
+      let foundIdx = _.findIndex(array, function(item) {
         return item == arrayOrObject[i];
       });
       array[foundIdx].added = true;
@@ -19,7 +19,7 @@ function markBDAdded(array, arrayOrObject) {
       }
     }*/
   } else {
-    let foundIdx = _.findIndex(array, function (item) {
+    let foundIdx = _.findIndex(array, function(item) {
       return item == arrayOrObject;
     });
     array[foundIdx].added = true;
@@ -29,7 +29,7 @@ function markBDAdded(array, arrayOrObject) {
 function markHKAdded(array, arrayOrObject, addAC, quantity) {
   if (Array.isArray(arrayOrObject)) {
     for (let i = 0; i < arrayOrObject.length; i++) {
-      let foundIdx = _.findIndex(array, function (item) {
+      let foundIdx = _.findIndex(array, function(item) {
         return item == arrayOrObject[i];
       });
       if (foundIdx > -1) {
@@ -38,7 +38,7 @@ function markHKAdded(array, arrayOrObject, addAC, quantity) {
     }
     return array;
   } else {
-    let foundIdx = _.findIndex(array, function (item) {
+    let foundIdx = _.findIndex(array, function(item) {
       return item == arrayOrObject;
     });
     array[foundIdx].added = true;
@@ -81,14 +81,14 @@ function neverMoreThanHKQty(number, hkKg, currHKQty) {
 }
 function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
   if (hkObject.qty > calculatedBefore) {
-    let otherBDs = _.filter(bd, function (item) {
+    let otherBDs = _.filter(bd, function(item) {
       return (
         item.before === false &&
         item.owedQty > 0 &&
         item.materialNo == hkObject.materialNo
       );
     });
-    let otherHKs = _.filter(hk, function (item) {
+    let otherHKs = _.filter(hk, function(item) {
       return (
         item.materialNo === hkObject.materialNo && !_.isEqual(item, hkObject)
       );
@@ -114,7 +114,7 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
   });
   if (filteredHK.length > 1) {
     let sortedArr = _.sortBy(filteredHK, "qty");
-    let result = _.find(sortedArr, function (item) {
+    let result = _.find(sortedArr, function(item) {
       return item.qty > bdActualBeforeQty;
     });
 
