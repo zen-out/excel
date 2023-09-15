@@ -1,9 +1,9 @@
 const HK_FILE = "./data/hk_input_1.xlsx";
 const BD_FILE = "./data/bd_input_1_notweirddates.xlsx";
 const ANSWERS_FILE = "./data/hk_output_1.xlsx";
-const DOUBLE_CHECK_HK = "./data/hk_input_3.xlsx";
-const DOUBLE_CHECK_BD = "./data/bd_input_4.xlsx";
-const DOUBLE_CHECK_OUTPUT = "./data/hk_output_3.xlsx";
+const DOUBLE_CHECK_HK = "./data/hkor.xlsx";
+const DOUBLE_CHECK_BD = "./data/bdor.xlsx";
+const DOUBLE_CHECK_OUTPUT = "./data/hkor.outputwithanswers.xlsx";
 const TEMPLATE_FILE = "./data/template.xlsx";
 const OUTPUT_FILE = "./data/output.xlsx";
 const DAYS_TO_ADD = 35;
@@ -23,7 +23,17 @@ const BD_OWED_QUANTITY = "C";
 const BD_ALLOCATE_IN_TRANSITE_WAREHOUSE = "D";
 const BD_ASSIGN_MAX_IN_TRANSIT_DATE = "E";
 const BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION = "F";
-
+// const HK_ITEM_NUMBER = "D";
+// const HK_ITEM_DESCRIPTION = "G";
+// const HK_QTY = "I";
+// const HK_ACORSC = "M";
+// const HK_REMARKS = "Q";
+// const BD_DATE_OF_ISSUE = "W";
+// const BD_MATERIAL_NUMBER = "Y";
+// const BD_OWED_QUANTITY = "AQ";
+// const BD_ALLOCATE_IN_TRANSITE_WAREHOUSE = "AX";
+// const BD_ASSIGN_MAX_IN_TRANSIT_DATE = "BA";
+// const BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION = "BB";
 module.exports = {
   HK_FILE,
   BD_FILE,
