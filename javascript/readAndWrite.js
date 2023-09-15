@@ -29,8 +29,11 @@ class ReadAndWrite {
   init(test) {
     if (test) {
       let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE_2);
+      getOutput = this.keepKeysTesting(getOutput, "hk");
       let getHK = this.reassignKeys(this.hkFile, "hk", CURRENT_DATE_2);
+      getHK = this.keepKeysTesting(getHK, "hk");
       let getBD = this.reassignKeys(this.bdFile, "bd", CURRENT_DATE_2);
+      getBD = this.keepKeysTesting(getBD, "bd");
       return { getOutput, getHK, getBD };
     } else {
       let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE);
@@ -139,9 +142,10 @@ class ReadAndWrite {
     if (typeof stringOrNum === "string") {
       if (!weird_date) {
         returnDate = new Date(stringOrNum.trim());
-        let resultDate = new Date(returnDate.getTime());
-        resultDate.setDate(returnDate.getDate() + 1);
-        return resultDate;
+        // let resultDate = new Date(returnDate.getTime());
+        // resultDate.setDate(returnDate.getDate() + 1);
+        // return resultDate;
+        return returnDate; 
       } else {
         returnDate = new Date(stringOrNum.trim());
         let resultDate = new Date(returnDate.getTime());
@@ -157,9 +161,10 @@ class ReadAndWrite {
         returnDate = new Date(
           excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
         );
-        let resultDate = new Date(returnDate.getTime());
-        resultDate.setDate(returnDate.getDate() + 1);
-        return returnDate;
+        return returnDate; 
+        // let resultDate = new Date(returnDate.getTime());
+        // resultDate.setDate(returnDate.getDate() + 1);
+        // return returnDate;
       } else {
         const excelEpoch = new Date(1899, 11, 31);
         const excelEpochAsUnixTimestamp = excelEpoch.getTime();
@@ -226,47 +231,47 @@ class ReadAndWrite {
       let newObj = {};
       let keys = Object.keys(obj);
       keys.forEach((key, index) => {
-        if (key.toLowerCase().includes("item description")) {
-          let kg = this.getWeight(obj[key]);
-          newObj["kg"] = kg;
-          newObj["added"] = false;
-        }
-
-        if (key.toLowerCase().includes("date of issue")) {
-          let dateOfIssue = this.convertToDate(obj[key], WEIRD_DATE_OF_ISSUE);
-          obj[key] = dateOfIssue;
-          let beforeOrAfter = this.getNextWedAndDays(date);
-          if (beforeOrAfter > dateOfIssue) {
-            newObj["before"] = true;
-          } else {
-            newObj["before"] = false;
-          }
-          newObj["added"] = false;
-        }
-        if (key.toLowerCase().includes("assign maximum in transit")) {
-          let assignMax = this.convertToDate(obj[key], WEIRD_ASSIGN_MAX_DATE);
-          if (isNaN(assignMax)) {
-            obj[key] = " ";
-          } else {
-            obj[key] = assignMax;
-          }
-          obj[key] = assignMax;
-        }
-
-        if (key.toLowerCase().includes("owed quantity")) {
-          // let addWeight = obj[key] + WEIGHT_TO_ADD;
-          let addWeight = obj[key];
-          obj[key] = addWeight;
-        }
-
         let keyIndex = oldKeys.indexOf(index);
         if (keyIndex > -1) {
-          newObj[newKeys[keyIndex]] = obj[key];
-        } else {
+          if (type == "bd") {
+            if (newKeys[keyIndex] === "dateOfIssue") {
+              let dateOfIssue = this.convertToDate(obj[key], WEIRD_DATE_OF_ISSUE);
+              newObj["dateOfIssue"] = dateOfIssue;
+              let beforeOrAfter = this.getNextWedAndDays(date);
+              if (beforeOrAfter > dateOfIssue) {
+                newObj["before"] = true;
+              } else {
+                newObj["before"] = false;
+              }
+              newObj["added"] = false;  
+            } 
+            if (newKeys[keyIndex] === "assignMaxInTransit") {
+               let assignMax = this.convertToDate(obj[key], WEIRD_ASSIGN_MAX_DATE);
+              newObj["assignMaxInTransit"] = assignMax;
+            } 
+            if (newKeys[keyIndex] === "owedQty") {
+            let addWeight = obj[key] + WEIGHT_TO_ADD;
+              newObj["owedQty"] = addWeight;
+            }
+            if (newKeys[keyIndex]=== "materialNo" || newKeys[keyIndex]=== "allocateInTransit" || newKeys[keyIndex]=== "materialShortageAfterInventory") {
+              newObj[newKeys[keyIndex]] = obj[key];
+            }
+          } else if (type == "hk") {
+           if (newKeys[keyIndex] === "description") {
+              let kg = this.getWeight(obj[key]);
+              newObj["kg"] = kg;
+              newObj["added"] = false;
+            } else {
+              newObj[newKeys[keyIndex]] = obj[key];
+            }
+          } 
+        } 
+        /*else {
           // Otherwise, use the old key
           newObj[key] = obj[key];
-        }
+        }*/
       });
+      
 
       return newObj;
     });
@@ -306,16 +311,21 @@ class ReadAndWrite {
     });
     return newArray;
   }
-  changeBDFile(array) {
-    let keepKeys = [
-      "dateOfIssue",
-      "materialNo",
-      "owedQty",
-      "allocateInTransit",
-      "assignMaxInTransit",
-      "materialShortageAfterInventory",
-      "before",
-    ];
+  keepKeysTesting(array, type) {
+    let keepKeys;
+    if (type == "bd") {
+      keepKeys = [
+        "dateOfIssue",
+        "materialNo",
+        "owedQty",
+        "allocateInTransit",
+        "assignMaxInTransit",
+        "materialShortageAfterInventory",
+        "before",
+      ];
+    } else {
+      keepKeys = ["materialNo", "description", "qty", "airOrShip", "remarks"];
+    }
 
     array = array.map((obj) => {
       Object.keys(obj).forEach((key) => {
