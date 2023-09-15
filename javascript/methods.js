@@ -17,17 +17,18 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
     let materialNo = currBD.materialNo;
     if (!currBD.added) {
       if (currBD.before) {
+
         // If
         if (
-          !isNaN(currBD.assignMaxInTransit) &&
-          currBD.assignMaxInTransit > currBD.dateOfIssue &&
-          currBD.allocateInTransit != 0
+          // !isNaN(currBD.assignMaxInTransit) &&
+          currBD.assignMaxInTransit > currBD.dateOfIssue
+          // && currBD.allocateInTransit != 0
         ) {
           airShipFlag = true;
-          actualQuantity = actualQuantity + currBD.allocateInTransit;
+          actualQuantity = actualQuantity + currBD.owedQty;
           markBDAdded(bd, currBD);
-        } else if (currBD.owedQty != 0) {
-          actualQuantity += currBD.owedQty;
+        } else {
+          actualQuantity += currBD.materialShortageAfterInventory;
           airShipFlag = true;
           markBDAdded(bd, currBD);
         }
@@ -48,8 +49,8 @@ function markBefores(hk, bd, test) {
         bd_filter,
         test
       );
-      if (test === materialNo) {
-        // console.log(materialNo, actualQuantity);
+      if (test == materialNo) {
+        console.log(materialNo, actualQuantity);
       }
       if (airShipFlag) {
         hk = getBeforeQty(hk, hk[i], bd, actualQuantity, test);
@@ -91,9 +92,6 @@ function markAfters(hk, bd, test) {
         bd_filter
       );
 
-      // let getAfter = getAfterQty(hk, hk[i], actualQuantity);
-      if (test === "TAC00002210") {
-      }
       hk[i].airOrShip = "SC";
       if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;
