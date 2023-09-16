@@ -209,7 +209,7 @@ function runTest(reassignedOutput, hkOutput) {
     _.some(getOutput, (obj2) => _.isEqual(obj1, obj2))
   );
   let difference = _.differenceWith(getHK, getOutput, _.isEqual);
-  console.log("difference", difference);
+  // console.log("difference", difference);
   let correct = _.intersectionWith(getHK, getOutput, _.isEqual);
   console.debug(`NICE JOB: ${similarObjects.length}/${getOutput.length}`);
   console.debug(

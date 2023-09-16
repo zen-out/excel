@@ -1,11 +1,13 @@
+const { DateTime, Duration } = require("luxon");
+
 const {
   DAYS_TO_ADD,
   OUTPUT_FILE,
   WEIGHT_TO_ADD,
   CURRENT_DATE,
   CURRENT_DATE_2,
-  WEIRD_DATE_OF_ISSUE,
-  WEIRD_ASSIGN_MAX_DATE,
+  FORMAT_DATE_OF_ISSUE,
+  FORMAT_ASSIGN_MAX_DATE,
   HK_ITEM_NUMBER,
   HK_ITEM_DESCRIPTION,
   HK_QTY,
@@ -14,7 +16,6 @@ const {
   BD_DATE_OF_ISSUE,
   BD_MATERIAL_NUMBER,
   BD_OWED_QUANTITY,
-  BD_ALLOCATE_IN_TRANSITE_WAREHOUSE,
   BD_ASSIGN_MAX_IN_TRANSIT_DATE,
   BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION,
 } = require("./variables.js");
@@ -137,66 +138,6 @@ class ReadAndWrite {
     let value = result - 1;
     return value;
   }
-  convertToDate(stringOrNum, weird_date) {
-    let returnDate;
-    if (typeof stringOrNum === "string") {
-      if (!weird_date) {
-        returnDate = new Date(stringOrNum.trim());
-        // let resultDate = new Date(returnDate.getTime());
-        // resultDate.setDate(returnDate.getDate() + 1);
-        // return resultDate;
-        return returnDate; 
-      } else {
-        returnDate = new Date(stringOrNum.trim());
-        let resultDate = new Date(returnDate.getTime());
-        resultDate.setDate(returnDate.getDate() + 1);
-        return returnDate;
-      }
-    } else if (typeof stringOrNum === "number") {
-      stringOrNum = parseInt(stringOrNum);
-      if (!weird_date) {
-        const excelEpoch = new Date(1899, 11, 31);
-        const excelEpochAsUnixTimestamp = excelEpoch.getTime();
-        const millisecondsPerDay = 24 * 60 * 60 * 1000;
-        returnDate = new Date(
-          excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
-        );
-        return returnDate; 
-        // let resultDate = new Date(returnDate.getTime());
-        // resultDate.setDate(returnDate.getDate() + 1);
-        // return returnDate;
-      } else {
-        const excelEpoch = new Date(1899, 11, 31);
-        const excelEpochAsUnixTimestamp = excelEpoch.getTime();
-        const millisecondsPerDay = 24 * 60 * 60 * 1000;
-        returnDate = new Date(
-          excelEpochAsUnixTimestamp + stringOrNum * millisecondsPerDay
-        );
-        // let newDate = new Date(returnDate);
-        let month = returnDate.getUTCMonth() + 1; // getMonth() returns month index starting from 0
-        let day = returnDate.getUTCDate();
-        let year = returnDate.getUTCFullYear();
-        let hours = returnDate.getUTCHours();
-        let minutes = returnDate.getUTCMinutes();
-        let seconds = returnDate.getUTCSeconds();
-        let swappedDate = new Date(
-          Date.UTC(year, day - 1, month, hours, minutes, seconds)
-        );
-        return swappedDate;
-      }
-    } else {
-      returnDate = null;
-      return returnDate;
-    }
-  }
-  getNextWedAndDays(currDate) {
-    let resultDate = new Date(currDate.getTime());
-    resultDate.setDate(
-      currDate.getDate() + ((3 - 1 - currDate.getDay() + 7) % 7) + 1
-    );
-    resultDate.setDate(resultDate.getDate() + DAYS_TO_ADD);
-    return resultDate;
-  }
   reassignKeys(data, type, date) {
     let oldKeys;
     let newKeys;
@@ -211,20 +152,20 @@ class ReadAndWrite {
       newKeys = ["materialNo", "description", "qty", "airOrShip", "remarks"];
     } else {
       oldKeys = [
-        this.getLetterPosition(BD_DATE_OF_ISSUE),
         this.getLetterPosition(BD_MATERIAL_NUMBER),
         this.getLetterPosition(BD_OWED_QUANTITY),
-        this.getLetterPosition(BD_ALLOCATE_IN_TRANSITE_WAREHOUSE),
         this.getLetterPosition(BD_ASSIGN_MAX_IN_TRANSIT_DATE),
         this.getLetterPosition(BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION),
+
+        this.getLetterPosition(BD_DATE_OF_ISSUE),
       ];
       newKeys = [
-        "dateOfIssue",
         "materialNo",
         "owedQty",
-        "allocateInTransit",
         "assignMaxInTransit",
         "materialShortageAfterInventory",
+
+        "dateOfIssue",
       ];
     }
     let result = data.map((obj) => {
@@ -234,8 +175,32 @@ class ReadAndWrite {
         let keyIndex = oldKeys.indexOf(index);
         if (keyIndex > -1) {
           if (type == "bd") {
+            if (newKeys[keyIndex] === "materialNo") {
+              let trimmed = obj[key].trim();
+              newObj[newKeys[keyIndex]] = trimmed;
+            }
+            if (newKeys[keyIndex] === "materialShortageAfterInventory") {
+              newObj[newKeys[keyIndex]] = obj[key];
+            }
             if (newKeys[keyIndex] === "dateOfIssue") {
-              let dateOfIssue = this.convertToDate(obj[key], WEIRD_DATE_OF_ISSUE);
+              newObj[newKeys[keyIndex]] = obj[key];
+              /*
+              let dateOfIssue;
+              if (newObj.materialNo) {
+                if (newObj.materialNo.includes("TAC01114990")) {
+                  console.log(obj[key], "get date first");
+                }
+                dateOfIssue = this.convertToDate(
+                  obj[key],
+                  FORMAT_DATE_OF_ISSUE,
+                  newObj.materialNo
+                );
+              } else {
+                dateOfIssue = this.convertToDate(
+                  obj[key],
+                  FORMAT_DATE_OF_ISSUE
+                );
+              }
               newObj["dateOfIssue"] = dateOfIssue;
               let beforeOrAfter = this.getNextWedAndDays(date);
               if (beforeOrAfter > dateOfIssue) {
@@ -243,44 +208,50 @@ class ReadAndWrite {
               } else {
                 newObj["before"] = false;
               }
-              newObj["added"] = false;  
-            } 
+              newObj["added"] = false;
+              */
+            }
             if (newKeys[keyIndex] === "assignMaxInTransit") {
-               let assignMax = this.convertToDate(obj[key], WEIRD_ASSIGN_MAX_DATE);
-              newObj["assignMaxInTransit"] = assignMax;
-            } 
+              newObj[newKeys[keyIndex]] = obj[key];
+              // let assignMax;
+              // if (newObj.materialNo) {
+              //   assignMax = this.convertToDate(
+              //     obj[key],
+              //     FORMAT_ASSIGN_MAX_DATE,
+              //     newObj.materialNo
+              //   );
+              // } else {
+              //   assignMax = this.convertToDate(obj[key], FORMAT_ASSIGN_MAX_DATE);
+              // }
+              // newObj["assignMaxInTransit"] = assignMax;
+            }
             if (newKeys[keyIndex] === "owedQty") {
-            let addWeight = obj[key] + WEIGHT_TO_ADD;
+              let addWeight = obj[key] + WEIGHT_TO_ADD;
               newObj["owedQty"] = addWeight;
             }
-            if (newKeys[keyIndex]=== "materialNo" || newKeys[keyIndex]=== "allocateInTransit" || newKeys[keyIndex]=== "materialShortageAfterInventory") {
+          } else if (type == "hk") {
+            if (newKeys[keyIndex] === "materialNo") {
+              let trimmed = obj[key].trim();
+              newObj[newKeys[keyIndex]] = trimmed;
+            }
+            if (
+              newKeys[keyIndex] === "remarks" ||
+              newKeys[keyIndex] === "qty" ||
+              newKeys[keyIndex] === "airOrShip"
+            ) {
               newObj[newKeys[keyIndex]] = obj[key];
             }
-          } else if (type == "hk") {
-           if (newKeys[keyIndex] === "description") {
+            if (newKeys[keyIndex] === "description") {
+              newObj[newKeys[keyIndex]] = obj[key];
               let kg = this.getWeight(obj[key]);
               newObj["kg"] = kg;
               newObj["added"] = false;
-            } else {
-              newObj[newKeys[keyIndex]] = obj[key];
             }
-          } 
-        } 
-        /*else {
-          // Otherwise, use the old key
-          newObj[key] = obj[key];
-        }*/
+          }
+        }
       });
-      
 
       return newObj;
-    });
-    result = result.map((obj) => {
-      if (obj.materialNo && typeof obj.materialNo === "string") {
-        return { ...obj, materialNo: obj.materialNo.trim() };
-      } else {
-        return obj;
-      }
     });
     return result;
   }
@@ -321,10 +292,17 @@ class ReadAndWrite {
         "allocateInTransit",
         "assignMaxInTransit",
         "materialShortageAfterInventory",
-        "before", 
+        "before",
       ];
     } else {
-      keepKeys = ["materialNo", "description", "qty", "airOrShip", "remarks", "kg"];
+      keepKeys = [
+        "materialNo",
+        "description",
+        "qty",
+        "airOrShip",
+        "remarks",
+        "kg",
+      ];
     }
 
     array = array.map((obj) => {

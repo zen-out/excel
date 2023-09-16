@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "chai": "^4.3.8",
     "dotenv": "^16.3.1",
     "lodash": "^4.17.21",
+    "luxon": "^3.4.3",
     "mocha": "^10.2.0",
     "winston": "^3.10.0",
     "xlsx": "^0.18.5"
@@ -10,7 +12,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index",
+    "test": "mocha",
+    "before": "mocha test/before.test.js",
+    "after": "mocha test/after.test.js",
+    "read": "mocha test/readAndWrite.test.js",
+    "utility": "mocha test/utility.test.js",
+    "dates": "mocha test/dates.test.js"
   },
   "repository": {
     "type": "git",

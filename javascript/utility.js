@@ -1,4 +1,8 @@
 const _ = require("lodash");
+
+function getFiltered(arr, materialNo) {
+  return _.filter(arr, (o) => _.includes(o.materialNo, materialNo));
+}
 function markBDAdded(array, arrayOrObject) {
   if (Array.isArray(arrayOrObject)) {
     for (let i = 0; i < arrayOrObject.length; i++) {
@@ -59,4 +63,4 @@ function neverMoreThanHKQty(number, hkKg, currHKQty) {
   }
 }
 
-module.exports = { markBDAdded, markHKAdded, neverMoreThanHKQty };
+module.exports = { getFiltered, markBDAdded, markHKAdded, neverMoreThanHKQty };

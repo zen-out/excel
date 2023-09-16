@@ -3,6 +3,7 @@ const {
   markHKAdded,
   markBDAdded,
   neverMoreThanHKQty,
+  getFiltered,
 } = require("./utility.js");
 function duplicateItemWithSC(hk, obj, number) {
   let index = _.findIndex(hk, obj);
@@ -55,25 +56,27 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
     let materialNo = currBD.materialNo;
     if (!currBD.added) {
       if (currBD.before) {
-        // If
-        if (
-          // !isNaN(currBD.assignMaxInTransit) &&
-          currBD.assignMaxInTransit > currBD.dateOfIssue
-          // && currBD.allocateInTransit != 0
-        ) {
+        if (currBD.assignMaxInTransit > currBD.dateOfIssue) {
+          if (test == materialNo) {
+            console.log(currBD, "one");
+          }
           airShipFlag = true;
           actualQuantity = actualQuantity + currBD.owedQty;
-          markBDAdded(bd, currBD);
+          bd = markBDAdded(bd, currBD);
         } else {
           actualQuantity += currBD.materialShortageAfterInventory;
           airShipFlag = true;
-          markBDAdded(bd, currBD);
+          bd = markBDAdded(bd, currBD);
         }
       }
     }
   }
 
-  return { airShipFlag, actualQuantity };
+  if (actualQuantity == 0) {
+    airShipFlag = false;
+  }
+  let markedBDs = bd;
+  return { markedBDs, airShipFlag, actualQuantity };
 }
 
 function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
@@ -110,15 +113,21 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       // lol
     }
   } else {
+    if (materialNo == test) {
+      // console.log("here", bdActualBeforeQty);
+    }
     if (currHKQty > bdActualBeforeQty) {
-      let seeIfWhole = bdActualBeforeQty / hkKg;
-      if (Number.isInteger(seeIfWhole)) {
-        calculatedBeforeQty = neverMoreThanHKQty(seeIfWhole, hkKg, currHKQty);
-        acSheets = seeIfWhole;
+      if (bdActualBeforeQty == 0) {
       } else {
-        let rounded = Math.ceil(seeIfWhole);
-        acSheets = rounded;
-        calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
+        let seeIfWhole = bdActualBeforeQty / hkKg;
+        if (Number.isInteger(seeIfWhole)) {
+          calculatedBeforeQty = neverMoreThanHKQty(seeIfWhole, hkKg, currHKQty);
+          acSheets = seeIfWhole;
+        } else {
+          let rounded = Math.ceil(seeIfWhole);
+          acSheets = rounded;
+          calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
+        }
       }
     } else {
       calculatedBeforeQty = currHKQty;
@@ -149,13 +158,14 @@ function markBefores(hk, bd, test) {
     if (!hk[i].added) {
       let bd_filter = _.filter(bd, { materialNo: materialNo });
 
-      let { airShipFlag, actualQuantity } = getBeforeActualQuantity(
+      let { markedBDs, airShipFlag, actualQuantity } = getBeforeActualQuantity(
         bd,
         bd_filter,
         test
       );
+      bd = markedBDs;
       if (test == materialNo) {
-        console.log(materialNo, actualQuantity);
+        console.log(materialNo, actualQuantity, airShipFlag);
       }
       if (airShipFlag) {
         hk = getBeforeQty(hk, hk[i], bd, actualQuantity, test);
