@@ -3,7 +3,7 @@
 ## Requirements
 
 - For BD: 
-1. 
+-- 
 
 -- If Assign Maximum in Transit Date is later than Date of Issue, account for the allocate in transite warehouse. Otherwise, take the owed quantity. 
 

@@ -1,10 +1,6 @@
 const _ = require("lodash");
-const {
-  getBeforeQty,
-  getAfterQty,
-  getAfterQtyPartTwo,
-} = require("./functions.js");
-const { markBefores } = require("./methods");
+const { getBeforeQty, markBefores } = require("./before.js");
+const { getAfterQty } = require("./after.js");
 const { ReadAndWrite } = require("./readAndWrite.js");
 
 function refineBeforeTest(hk, output) {}
@@ -213,6 +209,7 @@ function runTest(reassignedOutput, hkOutput) {
     _.some(getOutput, (obj2) => _.isEqual(obj1, obj2))
   );
   let difference = _.differenceWith(getHK, getOutput, _.isEqual);
+  console.log("difference", difference);
   let correct = _.intersectionWith(getHK, getOutput, _.isEqual);
   console.debug(`NICE JOB: ${similarObjects.length}/${getOutput.length}`);
   console.debug(

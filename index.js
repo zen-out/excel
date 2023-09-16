@@ -8,19 +8,13 @@ const {
   afterTest,
   additionalLengthTest,
 } = require("./javascript/tests.js");
+const { getBeforeQty, markBefores } = require("./javascript/before.js");
 const {
-  getBeforeQty,
   getAfterQty,
-
   getAfterQtyPartTwo,
-  markBDAdded,
-} = require("./javascript/functions.js");
-const {
-  markBefores,
   markAfters,
   getAfterActualQuantity,
-} = require("./javascript/methods.js");
-
+} = require("./javascript/after.js");
 const { ReadAndWrite } = require("./javascript/readAndWrite.js");
 const {
   HK_FILE,
@@ -65,7 +59,7 @@ function doubleCheckTest() {
   //   bd
   // );
 }
-doubleCheckTest();
+// doubleCheckTest();
 
 function alwaysRunThisTest() {
   let materialNo = "TAC00070840";
@@ -78,4 +72,4 @@ function alwaysRunThisTest() {
   runTest(getOutput, getAfters.hk);
   additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
 }
-// alwaysRunThisTest();
+alwaysRunThisTest();
