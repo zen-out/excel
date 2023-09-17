@@ -232,6 +232,8 @@ function onlyTestVariables(hk, output) {
   let getOutput = _.map(output, (item) =>
     _.pick(item, ["qty", "materialNo", "airOrShip"])
   );
+  getHK = _.sortBy(getHK, ["materialNo", "qty"], ["asc"]);
+  getOutput = _.sortBy(getOutput, ["materialNo", "qty"], ["asc", "asc"]);
   return { getHK, getOutput };
 }
 module.exports = {

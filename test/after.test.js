@@ -12,7 +12,7 @@ const bdor = "./testData/bdor_test.xlsx";
 const hkor = "./testData/hkor_test.xlsx";
 const output = "./testData/output_test.xlsx";
 const {
-  getAfterActualQuantity,
+  getBDAfterActualQuantity,
   getAfterQty,
   markAfters,
 } = require("../javascript/after.js");

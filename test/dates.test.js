@@ -48,7 +48,6 @@ describe("convertToDate", function () {
   it("should correctly format if the format changes", function () {
     let tac12070 = getFiltered(getBD, "79670");
     let fourth = tac12070[0].assignMaxInTransit;
-    console.log(fourth);
     let expected = "2023-09-21T00:00:00.000+08:00";
     expect(fourth).to.equal(expected);
   });
@@ -75,10 +74,10 @@ describe("convertToDate", function () {
   });
 
   it("should return true if 35 days and after lands right on that date", function () {
-    let tac70840 = getFiltered(getBD, "70840");
-    let firstDate = tac70840[1].dateOfIssue;
-    let secondDate = getNextWedAndDays(new Date("2023-09-15"));
-    let output = isSecondDateLater(firstDate, secondDate);
+    let tac70840 = getFiltered(getBD, "81440");
+    let dateOfIssue = tac70840[1].dateOfIssue;
+    let endOct = getNextWedAndDays(new Date("2023-09-15"));
+    let output = isSecondDateLater(dateOfIssue, endOct);
     expect(output).to.equal(false);
   });
 });

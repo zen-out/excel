@@ -3,25 +3,9 @@ const {
   markHKAdded,
   markBDAdded,
   neverMoreThanHKQty,
+  getFiltered,
 } = require("./utility.js");
-function getAfterActualQuantity(bd, bd_filter) {
-  let actualQuantity = 0;
-  let seaShipFlag = false;
-  for (let j = 0; j < bd_filter.length; j++) {
-    let currBD = bd_filter[j];
-    if (!currBD.added) {
-      if (!currBD.before) {
-        if (currBD.owedQty != 0) {
-          actualQuantity += currBD.owedQty;
-          seaShipFlag = true;
-          markBDAdded(bd, currBD);
-        }
-      }
-    }
-  }
-  return { seaShipFlag, actualQuantity };
-}
-
+const { isSecondDateLater } = require("./dates.js");
 function getAfterQty(hk, currHK) {
   let returnQty;
   let currHKQty = currHK.qty;
@@ -44,18 +28,58 @@ function getAfterQty(hk, currHK) {
   }
   return returnQty;
 }
+function getBDAfterActualQuantity(bd, bd_filter) {
+  let actualQuantity = 0;
+  let seaShipFlag = false;
+  for (let j = 0; j < bd_filter.length; j++) {
+    let currBD = bd_filter[j];
+    if (!currBD.added) {
+      if (!currBD.before) {
+        let assignMaxIsLater = isSecondDateLater(
+          currBD.dateOfIssue,
+          currBD.assignMaxInTransit
+        );
+        if (assignMaxIsLater) {
+          seaShipFlag = true;
+          actualQuantity = actualQuantity + currBD.owedQty;
+          bd = markBDAdded(bd, currBD);
+        } else {
+          actualQuantity += currBD.materialShortageAfterInventory;
+          seaShipFlag = true;
+          bd = markBDAdded(bd, currBD);
+        }
+      }
+    }
+  }
+  if (actualQuantity > 0) {
+    actualQuantity = actualQuantity.toFixed(3);
+    actualQuantity = parseFloat(actualQuantity);
+  }
+  if (actualQuantity == 0) {
+    seaShipFlag = false;
+  }
+  return { seaShipFlag, actualQuantity };
+}
+function sumOfCurrentHK(hk, materialNo) {
+  let filtered = _.filter(hk, { materialNo: materialNo });
+  let sum = _.sumBy(filtered, "qty");
+  return sum;
+}
 function markAfters(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
     let materialNo = hk[i].materialNo;
+    let originalQty = hk[i].qty;
     if (!hk[i].added) {
       let bd_filter = _.filter(bd, { materialNo: materialNo });
-      let { seaShipFlag, actualQuantity } = getAfterActualQuantity(
+      let { seaShipFlag, actualQuantity } = getBDAfterActualQuantity(
         bd,
         bd_filter
       );
-      // console.log("actual quantity", actualQuantity);
+      let hkSum = sumOfCurrentHK(hk, materialNo);
+
       hk[i].airOrShip = "SC";
-      if (hk[i].qty < hk[i].kg) {
+      if (hkSum > actualQuantity) {
+      } else if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;
       }
       hk = markHKAdded(hk, hk[i]);
@@ -65,4 +89,4 @@ function markAfters(hk, bd, test) {
   return { hk, bd };
 }
 
-module.exports = { getAfterActualQuantity, getAfterQty, markAfters };
+module.exports = { getBDAfterActualQuantity, getAfterQty, markAfters };

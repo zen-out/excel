@@ -22,12 +22,6 @@ describe("beforeFunctions", function () {
     let output = markBefores(getHK, getBD, "TAC00083840");
     let getAfters = markAfters(output.hk, output.bd);
     let result = onlyTestVariables(getAfters.hk, getOutput);
-    let sortedHK = _.sortBy(result.getHK, ["materialNo", "qty"], ["asc"]);
-    let sortedOutput = _.sortBy(
-      result.getOutput,
-      ["materialNo", "qty"],
-      ["asc", "asc"]
-    );
-    expect(sortedHK).to.deep.equal(sortedOutput);
+    expect(result.getHK).to.deep.equal(result.getOutput);
   });
 });

@@ -133,9 +133,6 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
           let rounded = Math.ceil(seeIfWhole);
           acSheets = rounded;
 
-          if (materialNo == test) {
-            console.log("hereeee!", rounded);
-          }
           calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
         }
       }

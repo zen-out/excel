@@ -13,7 +13,7 @@ const {
   getAfterQty,
   getAfterQtyPartTwo,
   markAfters,
-  getAfterActualQuantity,
+  getBDAfterActualQuantity,
 } = require("./javascript/after.js");
 const { ReadAndWrite } = require("./javascript/readAndWrite.js");
 const {
@@ -45,28 +45,26 @@ function doubleCheckTest() {
     bd
   );
 }
-// doubleCheckTest();
+doubleCheckTest();
 
 function alwaysRunThisTest() {
   let materialNo = "TAC00070840";
   let getFiles = new ReadAndWrite(
-    "./data/successful/hk_input_1.xlsx",
-    "./data/successful/bd_input_1_notweirddates.xlsx",
-    "./data/successful/hk_output_1.xlsx"
+    "./testData/hkor_test.xlsx",
+    "./testData/bdor_test.xlsx",
+    "./testData/output_test.xlsx"
     // "./testData/hkor_test.xlsx",
     // "./testData/bdor_test.xlsx",
     // "./testData/output_test.xlsx"
   );
   const { getOutput, getHK, getBD } = getFiles.init();
-  console.log(getBD);
   // console.log(_.filter(getBD, { materialNo: "TAC00083840" }));
   // console.log(_.filter(getHK, { materialNo: "TAC00083840" }));
   // console.log(_.filter(getOutput, { materialNo: "TAC00083840" }));
-  // console.log(getBD);
-  // console.log(getOutput);
-  // let { hk, bd } = markBefores(getHK, getBD, materialNo);
-  // let getAfters = markAfters(hk, bd);
-  // runTest(getOutput, getAfters.hk, true);
-  // additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
+
+  let { hk, bd } = markBefores(getHK, getBD, materialNo);
+  let getAfters = markAfters(hk, bd);
+  runTest(getOutput, getAfters.hk, true);
+  additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
 }
-alwaysRunThisTest();
+// alwaysRunThisTest();
