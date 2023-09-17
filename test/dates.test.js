@@ -64,4 +64,11 @@ describe("convertToDate", function () {
     let output = isSecondDateLater(firstDate, secondDate);
     expect(output).to.equal(true);
   });
+  it("should return true if assign max is invalid", function () {
+    let tac4990 = getFiltered(getBD, "4990");
+    let firstDate = tac4990[0].dateOfIssue;
+    let secondDate = tac4990[0].assignMaxInTransit;
+    let output = isSecondDateLater(firstDate, secondDate);
+    console.log(output);
+  });
 });

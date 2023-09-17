@@ -196,7 +196,7 @@ function additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bdAfter) {
     console.log("");
   }
 }
-function runTest(reassignedOutput, hkOutput) {
+function runTest(reassignedOutput, hkOutput, printOut) {
   console.debug("");
   console.debug("*** TEST ***");
   let getHK = _.map(hkOutput, (item) =>
@@ -209,7 +209,9 @@ function runTest(reassignedOutput, hkOutput) {
     _.some(getOutput, (obj2) => _.isEqual(obj1, obj2))
   );
   let difference = _.differenceWith(getHK, getOutput, _.isEqual);
-  // console.log("difference", difference);
+  if (printOut) {
+    console.log("difference", difference);
+  }
   let correct = _.intersectionWith(getHK, getOutput, _.isEqual);
   console.debug(`NICE JOB: ${similarObjects.length}/${getOutput.length}`);
   console.debug(

@@ -5,6 +5,7 @@ const {
   neverMoreThanHKQty,
   getFiltered,
 } = require("./utility.js");
+const { isSecondDateLater } = require("./dates.js");
 function duplicateItemWithSC(hk, obj, number) {
   let index = _.findIndex(hk, obj);
   if (index !== -1) {
@@ -56,10 +57,11 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
     let materialNo = currBD.materialNo;
     if (!currBD.added) {
       if (currBD.before) {
-        if (currBD.assignMaxInTransit > currBD.dateOfIssue) {
-          if (test == materialNo) {
-            console.log(currBD, "one");
-          }
+        let assignMaxIsLater = isSecondDateLater(
+          currBD.dateOfIssue,
+          currBD.assignMaxInTransit
+        );
+        if (assignMaxIsLater) {
           airShipFlag = true;
           actualQuantity = actualQuantity + currBD.owedQty;
           bd = markBDAdded(bd, currBD);

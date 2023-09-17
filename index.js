@@ -50,14 +50,17 @@ function doubleCheckTest() {
 
 function alwaysRunThisTest() {
   let materialNo = "TAC00070840";
-  let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
+  let getFiles = new ReadAndWrite(
+    "./testData/hkor_test.xlsx",
+    "./testData/bdor_test.xlsx",
+    "./testData/output_test.xlsx"
+  );
   const { getOutput, getHK, getBD } = getFiles.init();
   // console.log(getHK);
+  // console.log(getBD);
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
-  // beforeTest(hk);
   let getAfters = markAfters(hk, bd);
-  // getFiles.createFile(getAfters.hk, "test_output_1.xlsx", getOutput);
-  // runTest(getOutput, getAfters.hk);
+  runTest(getOutput, getAfters.hk, true);
   // additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
 }
 alwaysRunThisTest();

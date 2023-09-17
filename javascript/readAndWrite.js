@@ -1,5 +1,10 @@
 const { DateTime, Duration } = require("luxon");
-
+const {
+  convertToDate,
+  excelDateToJSDate,
+  getNextWedAndDays,
+  isSecondDateLater,
+} = require("./dates.js");
 const {
   DAYS_TO_ADD,
   OUTPUT_FILE,
@@ -138,7 +143,7 @@ class ReadAndWrite {
     let value = result - 1;
     return value;
   }
-  reassignKeys(data, type, date) {
+  reassignKeys(data, type, date, test) {
     let oldKeys;
     let newKeys;
     if (type == "hk") {
@@ -152,20 +157,18 @@ class ReadAndWrite {
       newKeys = ["materialNo", "description", "qty", "airOrShip", "remarks"];
     } else {
       oldKeys = [
+        this.getLetterPosition(BD_DATE_OF_ISSUE),
         this.getLetterPosition(BD_MATERIAL_NUMBER),
         this.getLetterPosition(BD_OWED_QUANTITY),
         this.getLetterPosition(BD_ASSIGN_MAX_IN_TRANSIT_DATE),
         this.getLetterPosition(BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION),
-
-        this.getLetterPosition(BD_DATE_OF_ISSUE),
       ];
       newKeys = [
+        "dateOfIssue",
         "materialNo",
         "owedQty",
         "assignMaxInTransit",
         "materialShortageAfterInventory",
-
-        "dateOfIssue",
       ];
     }
     let result = data.map((obj) => {
@@ -173,8 +176,10 @@ class ReadAndWrite {
       let keys = Object.keys(obj);
       keys.forEach((key, index) => {
         let keyIndex = oldKeys.indexOf(index);
+        // console.log("key", key);
         if (keyIndex > -1) {
           if (type == "bd") {
+            // console.log
             if (newKeys[keyIndex] === "materialNo") {
               let trimmed = obj[key].trim();
               newObj[newKeys[keyIndex]] = trimmed;
@@ -183,47 +188,28 @@ class ReadAndWrite {
               newObj[newKeys[keyIndex]] = obj[key];
             }
             if (newKeys[keyIndex] === "dateOfIssue") {
-              newObj[newKeys[keyIndex]] = obj[key];
-              /*
-              let dateOfIssue;
-              if (newObj.materialNo) {
-                if (newObj.materialNo.includes("TAC01114990")) {
-                  console.log(obj[key], "get date first");
-                }
-                dateOfIssue = this.convertToDate(
-                  obj[key],
-                  FORMAT_DATE_OF_ISSUE,
-                  newObj.materialNo
-                );
-              } else {
-                dateOfIssue = this.convertToDate(
-                  obj[key],
-                  FORMAT_DATE_OF_ISSUE
-                );
-              }
+              let dateOfIssue = convertToDate(
+                obj[key],
+                FORMAT_DATE_OF_ISSUE,
+                test
+              );
               newObj["dateOfIssue"] = dateOfIssue;
-              let beforeOrAfter = this.getNextWedAndDays(date);
-              if (beforeOrAfter > dateOfIssue) {
-                newObj["before"] = true;
-              } else {
+              let nextWedAnd35 = getNextWedAndDays(date);
+              let isAfter = isSecondDateLater(nextWedAnd35, dateOfIssue);
+              if (isAfter) {
                 newObj["before"] = false;
+              } else {
+                newObj["before"] = true;
               }
               newObj["added"] = false;
-              */
             }
             if (newKeys[keyIndex] === "assignMaxInTransit") {
-              newObj[newKeys[keyIndex]] = obj[key];
-              // let assignMax;
-              // if (newObj.materialNo) {
-              //   assignMax = this.convertToDate(
-              //     obj[key],
-              //     FORMAT_ASSIGN_MAX_DATE,
-              //     newObj.materialNo
-              //   );
-              // } else {
-              //   assignMax = this.convertToDate(obj[key], FORMAT_ASSIGN_MAX_DATE);
-              // }
-              // newObj["assignMaxInTransit"] = assignMax;
+              let assignMax = convertToDate(
+                obj[key],
+                FORMAT_ASSIGN_MAX_DATE,
+                test
+              );
+              newObj["assignMaxInTransit"] = assignMax;
             }
             if (newKeys[keyIndex] === "owedQty") {
               let addWeight = obj[key] + WEIGHT_TO_ADD;
