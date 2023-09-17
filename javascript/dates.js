@@ -40,7 +40,7 @@ function getNextWedAndDays(jsDate) {
 function isSecondDateLater(date1, date2) {
   let luxonDate1 = DateTime.fromISO(date1);
   let luxonDate2 = DateTime.fromISO(date2);
-  return luxonDate2 > luxonDate1;
+  return luxonDate2 >= luxonDate1;
 }
 
 module.exports = {

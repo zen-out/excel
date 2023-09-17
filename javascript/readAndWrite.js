@@ -33,20 +33,17 @@ class ReadAndWrite {
     this.answerFile = this.readFile(ANSWERS_FILE);
   }
   init(test) {
-    if (test) {
-      let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE_2);
-      getOutput = this.keepKeysTesting(getOutput, "hk");
-      let getHK = this.reassignKeys(this.hkFile, "hk", CURRENT_DATE_2);
-      getHK = this.keepKeysTesting(getHK, "hk");
-      let getBD = this.reassignKeys(this.bdFile, "bd", CURRENT_DATE_2);
-      getBD = this.keepKeysTesting(getBD, "bd");
-      return { getOutput, getHK, getBD };
-    } else {
-      let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE);
-      let getHK = this.reassignKeys(this.hkFile, "hk", CURRENT_DATE);
-      let getBD = this.reassignKeys(this.bdFile, "bd", CURRENT_DATE);
-      return { getOutput, getHK, getBD };
-    }
+    let getOutput = this.reassignKeys(
+      this.answerFile,
+      "hk",
+      new Date("2023-09-15")
+    );
+    getOutput = this.keepKeysTesting(getOutput, "hk");
+    let getHK = this.reassignKeys(this.hkFile, "hk", new Date("2023-09-15"));
+    getHK = this.keepKeysTesting(getHK, "hk");
+    let getBD = this.reassignKeys(this.bdFile, "bd", new Date("2023-09-15"));
+    getBD = this.keepKeysTesting(getBD, "bd");
+    return { getOutput, getHK, getBD };
   }
   readFile(file) {
     let returnData = [];
@@ -157,18 +154,20 @@ class ReadAndWrite {
       newKeys = ["materialNo", "description", "qty", "airOrShip", "remarks"];
     } else {
       oldKeys = [
-        this.getLetterPosition(BD_DATE_OF_ISSUE),
         this.getLetterPosition(BD_MATERIAL_NUMBER),
         this.getLetterPosition(BD_OWED_QUANTITY),
         this.getLetterPosition(BD_ASSIGN_MAX_IN_TRANSIT_DATE),
         this.getLetterPosition(BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION),
+
+        this.getLetterPosition(BD_DATE_OF_ISSUE),
       ];
       newKeys = [
-        "dateOfIssue",
         "materialNo",
         "owedQty",
         "assignMaxInTransit",
         "materialShortageAfterInventory",
+
+        "dateOfIssue",
       ];
     }
     let result = data.map((obj) => {

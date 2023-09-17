@@ -73,7 +73,10 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
       }
     }
   }
-
+  if (actualQuantity > 0) {
+    actualQuantity = actualQuantity.toFixed(3);
+    actualQuantity = parseFloat(actualQuantity);
+  }
   if (actualQuantity == 0) {
     airShipFlag = false;
   }
@@ -115,9 +118,6 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       // lol
     }
   } else {
-    if (materialNo == test) {
-      // console.log("here", bdActualBeforeQty);
-    }
     if (currHKQty > bdActualBeforeQty) {
       if (bdActualBeforeQty == 0) {
       } else {

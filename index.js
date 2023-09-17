@@ -37,8 +37,7 @@ function doubleCheckTest() {
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd, materialNo);
   getFiles.createFile(getAfters.hk, "test_output_3.xlsx", getOutput);
-  let diff = runTest(getOutput, getAfters.hk);
-  let filtered = _.filter(diff.correct, { airOrShip: "AC" });
+  runTest(getOutput, getAfters.hk, true);
   additionalLengthTest(
     DOUBLE_CHECK_HK,
     DOUBLE_CHECK_BD,
@@ -46,7 +45,7 @@ function doubleCheckTest() {
     bd
   );
 }
-// doubleCheckTest();
+doubleCheckTest();
 
 function alwaysRunThisTest() {
   let materialNo = "TAC00070840";
@@ -63,4 +62,4 @@ function alwaysRunThisTest() {
   runTest(getOutput, getAfters.hk, true);
   // additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
 }
-alwaysRunThisTest();
+// alwaysRunThisTest();

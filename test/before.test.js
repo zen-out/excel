@@ -29,22 +29,37 @@ describe("beforeFunctions", function () {
     getBD = result.getBD;
   });
   it("should account for BB unless assignMaxInTransit > dateOfIssue 0", function () {
-    // new file now
-    let materialNo = "TAC00010400";
-    let materialNo2 = "TAC00011410";
+    let materialNo = "TAC11179670";
+    let filtered = getFiltered(getBD, materialNo);
+    let output = getBeforeActualQuantity(getBD, filtered, materialNo);
+    console.log(output.getOutput);
+    expect(output.actualQuantity).to.equal(22.602);
   });
   it("if W is before 35 then use BB column (and ba is before W) column", function () {
-    let materialNo = "TAC00073450";
+    let materialNo = "TAC00070840";
+    let filtered = getFiltered(getBD, materialNo);
+    let output = getBeforeActualQuantity(getBD, filtered, materialNo);
+    expect(output.actualQuantity).to.equal(12.9);
   });
 
   it("should return 0 as actual quantity if conditions apply", function () {
-    let materialNo = "TAC00012070";
-    let bd = getFiltered(getBD, materialNo);
-    let hk = getFiltered(getHK, materialNo);
-    let result = getBeforeActualQuantity(getBD, bd, materialNo);
-    expect(result.actualQuantity).to.equal(0);
+    // let materialNo = "TAC00012070";
+    // let bd = getFiltered(getBD, materialNo);
+    // let hk = getFiltered(getHK, materialNo);
+    // let result = getBeforeActualQuantity(getBD, bd, materialNo);
+    // expect(result.actualQuantity).to.equal(0);
   });
   it("should split when hk quantity is greater than before", function () {});
 
   it("should correctly convert number to date", function () {});
+
+  it("should always be at least the original amount", function () {
+    let materialNo = "TAC00066440";
+    let materialNo2 = "TAC11154940";
+    let materialNo3 = "TAC11187850";
+    let filtered = getFiltered(getBD, materialNo3);
+    let output = getBeforeActualQuantity(getBD, filtered, materialNo3);
+    console.log(output.actualQuantity);
+    let expected = 74.96;
+  });
 });

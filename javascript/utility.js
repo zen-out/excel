@@ -47,9 +47,16 @@ function markHKAdded(array, arrayOrObject, addAC, quantity) {
     if (addAC) {
       array[foundIdx].airOrShip = "AC";
     }
+    let getOGQuantity = array[foundIdx].qty;
+
     if (quantity) {
-      array[foundIdx].qty = quantity;
+      if (getOGQuantity > quantity) {
+        array[foundIdx].qty = getOGQuantity;
+      } else {
+        array[foundIdx].qty = quantity;
+      }
     }
+
     return array;
   }
 }
