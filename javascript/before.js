@@ -18,7 +18,7 @@ function duplicateItemWithSC(hk, obj, number) {
       number = parseFloat(number.toFixed(2));
       duplicate.qty = number;
       if (obj.materialNo.includes("70840")) {
-        console.log("hi", duplicate);
+        // console.log("hi", duplicate);
       }
     } else {
       duplicate.added = false;
@@ -132,6 +132,10 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
         } else {
           let rounded = Math.ceil(seeIfWhole);
           acSheets = rounded;
+
+          if (materialNo == test) {
+            console.log("hereeee!", rounded);
+          }
           calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
         }
       }
@@ -168,7 +172,7 @@ function markBefores(hk, bd, test) {
 
       bd = markedBDs;
       if (test == materialNo) {
-        console.log(materialNo, actualQuantity, airShipFlag);
+        // console.log(materialNo, actualQuantity, airShipFlag);
       }
       if (airShipFlag) {
         hk = getBeforeQty(hk, hk[i], bd, actualQuantity, test);

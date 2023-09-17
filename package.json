@@ -19,7 +19,9 @@
     "read": "mocha test/readAndWrite.test.js",
     "utility": "mocha test/utility.test.js",
     "dates": "mocha test/dates.test.js",
-    "edge": "mocha test/edge.test.js"
+    "edge": "mocha test/edge.test.js",
+    "edge2": "mocha test/edge2.test.js",
+    "og": "mocha test/original.test.js"
   },
   "repository": {
     "type": "git",

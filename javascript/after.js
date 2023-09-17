@@ -19,7 +19,6 @@ function getAfterActualQuantity(bd, bd_filter) {
       }
     }
   }
-
   return { seaShipFlag, actualQuantity };
 }
 
@@ -59,7 +58,7 @@ function markAfters(hk, bd, test) {
       if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;
       }
-      markHKAdded(hk, hk[i]);
+      hk = markHKAdded(hk, hk[i]);
     }
   }
 
