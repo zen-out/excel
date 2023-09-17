@@ -45,7 +45,7 @@ function doubleCheckTest() {
     bd
   );
 }
-doubleCheckTest();
+// doubleCheckTest();
 
 function alwaysRunThisTest() {
   let materialNo = "TAC00070840";
@@ -62,4 +62,4 @@ function alwaysRunThisTest() {
   runTest(getOutput, getAfters.hk, true);
   // additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
 }
-// alwaysRunThisTest();
+alwaysRunThisTest();

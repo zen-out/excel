@@ -17,6 +17,9 @@ function duplicateItemWithSC(hk, obj, number) {
       duplicate.added = true;
       number = parseFloat(number.toFixed(2));
       duplicate.qty = number;
+      if (obj.materialNo.includes("70840")) {
+        console.log("hi", duplicate);
+      }
     } else {
       duplicate.added = false;
     }
