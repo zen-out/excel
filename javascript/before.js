@@ -30,6 +30,7 @@ function duplicateItemWithSC(hk, obj, number) {
 }
 
 function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
+  // let filteredBD = _.filter(bd, { materialNo: hkObject.materialNo });
   if (hkObject.qty > calculatedBefore) {
     let otherBDs = _.filter(bd, function (item) {
       return (
@@ -137,9 +138,6 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
     } else {
       calculatedBeforeQty = currHKQty;
     }
-    if (test == materialNo) {
-      // console.log(calculatedBeforeQty);
-    }
     let getDuplicates = shouldDuplicate(
       hk,
       currHK,
@@ -162,12 +160,12 @@ function markBefores(hk, bd, test) {
     let materialNo = hk[i].materialNo;
     if (!hk[i].added) {
       let bd_filter = _.filter(bd, { materialNo: materialNo });
-
       let { markedBDs, airShipFlag, actualQuantity } = getBeforeActualQuantity(
         bd,
         bd_filter,
         test
       );
+
       bd = markedBDs;
       if (test == materialNo) {
         console.log(materialNo, actualQuantity, airShipFlag);

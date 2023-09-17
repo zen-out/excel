@@ -55,8 +55,12 @@ function alwaysRunThisTest() {
     "./testData/output_test.xlsx"
   );
   const { getOutput, getHK, getBD } = getFiles.init();
-  // console.log(getHK);
+
+  // console.log(_.filter(getBD, { materialNo: "TAC11181200" }));
+  // console.log(_.filter(getHK, { materialNo: "TAC11181200" }));
+  console.log(_.filter(getOutput, { materialNo: "TAC11181200" }));
   // console.log(getBD);
+  // console.log(getOutput);
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd);
   runTest(getOutput, getAfters.hk, true);

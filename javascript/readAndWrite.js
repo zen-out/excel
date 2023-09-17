@@ -278,6 +278,7 @@ class ReadAndWrite {
         "assignMaxInTransit",
         "materialShortageAfterInventory",
         "before",
+        "added",
       ];
     } else {
       keepKeys = [
@@ -287,6 +288,7 @@ class ReadAndWrite {
         "airOrShip",
         "remarks",
         "kg",
+        "added",
       ];
     }
 

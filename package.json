@@ -18,7 +18,8 @@
     "after": "mocha test/after.test.js",
     "read": "mocha test/readAndWrite.test.js",
     "utility": "mocha test/utility.test.js",
-    "dates": "mocha test/dates.test.js"
+    "dates": "mocha test/dates.test.js",
+    "edge": "mocha test/edge.test.js"
   },
   "repository": {
     "type": "git",

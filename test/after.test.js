@@ -11,6 +11,11 @@ const {
 const bdor = "./testData/bdor_test.xlsx";
 const hkor = "./testData/hkor_test.xlsx";
 const output = "./testData/output_test.xlsx";
+const {
+  getAfterActualQuantity,
+  getAfterQty,
+  markAfters,
+} = require("../javascript/after.js");
 const chai = require("chai");
 const expect = chai.expect;
 
@@ -28,12 +33,8 @@ describe("beforeFunctions", function () {
     getHK = result.getHK;
     getBD = result.getBD;
   });
-  // it("should ");
-
-  it("should correctly convert number to date", function () {});
-  let materialNo = "TAC00000480";
-
-  it("should never exceed original amount", function () {
-    let materialNo = "TAC00083840";
+  it("should never exceed hk quantity", function () {
+    let { hk, bd } = markBefores(getHK, getBD, materialNo);
+    let getAfters = markAfters(hk, bd);
   });
 });

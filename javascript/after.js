@@ -11,7 +11,6 @@ function getAfterActualQuantity(bd, bd_filter) {
     let currBD = bd_filter[j];
     if (!currBD.added) {
       if (!currBD.before) {
-        // If it has an assign max in transit date, and its date is creater than date of issue, and it's allocate in transit date is not zero
         if (currBD.owedQty != 0) {
           actualQuantity += currBD.owedQty;
           seaShipFlag = true;
@@ -55,7 +54,7 @@ function markAfters(hk, bd, test) {
         bd,
         bd_filter
       );
-
+      // console.log("actual quantity", actualQuantity);
       hk[i].airOrShip = "SC";
       if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;

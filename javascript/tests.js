@@ -210,7 +210,7 @@ function runTest(reassignedOutput, hkOutput, printOut) {
   );
   let difference = _.differenceWith(getHK, getOutput, _.isEqual);
   if (printOut) {
-    console.log("difference", difference);
+    console.log("difference", _.orderBy(difference, ["materialNo"]));
   }
   let correct = _.intersectionWith(getHK, getOutput, _.isEqual);
   console.debug(`NICE JOB: ${similarObjects.length}/${getOutput.length}`);
@@ -225,6 +225,21 @@ function runTest(reassignedOutput, hkOutput, printOut) {
   return { difference, correct };
 }
 
-module.exports = { additionalLengthTest, runTest, beforeTest, afterTest };
+function onlyTestVariables(hk, output) {
+  let getHK = _.map(hk, (item) =>
+    _.pick(item, ["qty", "materialNo", "airOrShip"])
+  );
+  let getOutput = _.map(output, (item) =>
+    _.pick(item, ["qty", "materialNo", "airOrShip"])
+  );
+  return { getHK, getOutput };
+}
+module.exports = {
+  onlyTestVariables,
+  additionalLengthTest,
+  runTest,
+  beforeTest,
+  afterTest,
+};
 
 // remove
