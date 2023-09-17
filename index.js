@@ -34,13 +34,13 @@ function doubleCheckTest() {
     DOUBLE_CHECK_OUTPUT
   );
   const { getOutput, getHK, getBD } = getFiles.init(true);
-  // console.log(_.filter(getBD, { materialNo: "TAC00083840" }));
-  // console.log(_.filter(getHK, { materialNo: "TAC00083840" }));
-  // console.log(_.filter(getOutput, { materialNo: "TAC00083840" }));
+  // console.log(_.filter(getBD, { materialNo: "TAC00073450" }));
+  // console.log(_.filter(getHK, { materialNo: "TAC00073450" }));
+  // console.log(_.filter(getOutput, { materialNo: "TAC00073450" }));
 
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd, materialNo);
-  // getFiles.createFile(getAfters.hk, "test_output_3.xlsx", getOutput);
+  getFiles.createFile(getAfters.hk, "test_output_3.xlsx", getOutput);
   runTest(getOutput, getAfters.hk, true);
   additionalLengthTest(
     DOUBLE_CHECK_HK,
