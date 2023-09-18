@@ -5,8 +5,9 @@
 - Install node.js 
 
 ## Install 
-0. Go to github desktop and 
-
+0. Go to github desktop and clone repository 
+![clone github](./images/clone.png)
+![clone github](./images/clone2.png)
 1. Go to your terminal / command prompt and cd into the folder
 (cd means change directory)
 
