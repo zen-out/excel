@@ -76,11 +76,12 @@ function markAfters(hk, bd, test) {
         bd_filter
       );
       let hkSum = sumOfCurrentHK(hk, materialNo);
-
       hk[i].airOrShip = "SC";
       if (hkSum > actualQuantity) {
       } else if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;
+      } else if (hk[i].qty < actualQuantity) {
+        console.log("this condition");
       }
       hk = markHKAdded(hk, hk[i]);
     }

@@ -9,9 +9,7 @@ const { isSecondDateLater } = require("./dates.js");
 function duplicateItemWithSC(hk, obj, number) {
   let index = _.findIndex(hk, obj);
   if (index !== -1) {
-    // Create a deep copy of the object to avoid reference issues
     let duplicate = JSON.parse(JSON.stringify(hk[index]));
-    // Insert the duplicate object right after the original
     duplicate.airOrShip = "SC";
     if (typeof number == "number") {
       duplicate.added = true;
@@ -21,7 +19,6 @@ function duplicateItemWithSC(hk, obj, number) {
       duplicate.added = false;
     }
     hk.push(duplicate);
-    // hk.splice(index + 1, 0, duplicate);
   }
   return hk;
 }
@@ -69,11 +66,11 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
         if (assignMaxIsLater) {
           airShipFlag = true;
           actualQuantity = actualQuantity + currBD.owedQty;
-          // bd = markBDAdded(bd, currBD);
+          bd = markBDAdded(bd, currBD);
         } else {
           actualQuantity += currBD.materialShortageAfterInventory;
           airShipFlag = true;
-          // bd = markBDAdded(bd, currBD);
+          bd = markBDAdded(bd, currBD);
         }
       }
     }
@@ -119,7 +116,11 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       }
       hk = markHKAdded(hk, result, true, calculatedBeforeQty);
     } else {
-      let filteredBD = _.filter(bd, { materialNo: materialNo, before: true });
+      // the other else
+      let filteredBD = _.filter(bd, {
+        materialNo: materialNo,
+        before: true,
+      });
       if (filteredBD.length) {
         hk = markHKAdded(hk, currHK, true);
       }
