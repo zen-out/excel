@@ -151,6 +151,7 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
     );
     hk = getDuplicates.hk;
     bd = getDuplicates.bd;
+    // console.log(hk, "hk");
     let lessThanOneSheet = currHK.qty - calculatedBeforeQty;
     if (lessThanOneSheet < currHK.kg) {
       hk = markHKAdded(hk, currHK, true);
@@ -180,8 +181,8 @@ function markBefores(hk, bd, test) {
       }
     }
   }
-  // hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["asc", "asc"]);
-  // bd = _.orderBy(bd, ["owedQty"], ["desc"]);
+  hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["desc", "desc"]);
+  bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
 }
 

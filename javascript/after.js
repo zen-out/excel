@@ -65,6 +65,25 @@ function sumOfCurrentHK(hk, materialNo) {
   let sum = _.sumBy(filtered, "qty");
   return sum;
 }
+function sumOfCurrentBeforeHK(hk, materialNo) {
+  let filtered = _.filter(hk, { materialNo: materialNo, airOrShip: "AC" });
+  let sum = _.sumBy(filtered, "qty");
+  return sum;
+}
+function duplicateAfter(hk, obj, number) {
+  let index = _.findIndex(hk, obj);
+  if (index !== -1) {
+    let duplicate = JSON.parse(JSON.stringify(hk[index]));
+    duplicate.airOrShip = "SC";
+    if (typeof number == "number") {
+      duplicate.added = true;
+      number = parseFloat(number.toFixed(2));
+      duplicate.qty = number;
+    }
+    hk.push(duplicate);
+  }
+  return hk;
+}
 function markAfters(hk, bd, test) {
   for (let i = 0; i < hk.length; i++) {
     let materialNo = hk[i].materialNo;
@@ -79,8 +98,7 @@ function markAfters(hk, bd, test) {
       hk[i].airOrShip = "SC";
       if (hkSum > actualQuantity) {
       } else if (hk[i].qty < actualQuantity) {
-        // duplicate here
-        console.log("this condition", actualQuantity, hk[i].qty);
+        console.log(hk[i], "hereeee");
       } else if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;
       }
