@@ -86,13 +86,29 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
   return { markedBDs, airShipFlag, actualQuantity };
 }
 
+function round(currHK, bdActualBeforeQty) {
+  let currHKQty = currHK.qty;
+  let hkKg = currHK.kg;
+  let seeIfWhole = bdActualBeforeQty / hkKg;
+  let acSheets;
+  let calculatedBeforeQty;
+  if (Number.isInteger(seeIfWhole)) {
+    acSheets = seeIfWhole;
+    calculatedBeforeQty = neverMoreThanHKQty(seeIfWhole, hkKg, currHKQty);
+  } else {
+    let rounded = Math.ceil(seeIfWhole);
+    acSheets = rounded;
+    calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
+  }
+  return { calculatedBeforeQty, acSheets };
+}
+
 function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
   // bdActualBeforeQty += WEIGHT_TO_ADD;
   let calculatedBeforeQty;
   let acSheets;
   let currHKQty = currHK.qty;
   let materialNo = currHK.materialNo;
-  let hkKg = currHK.kg;
   let filteredHK = _.filter(hk, {
     materialNo: currHK.materialNo,
     added: false,
@@ -103,18 +119,19 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       return item.qty > bdActualBeforeQty;
     });
     if (result) {
-      currHKQty = result.qty;
-      hkKg = result.kg;
-      let seeIfWhole = bdActualBeforeQty / hkKg;
-      if (Number.isInteger(seeIfWhole)) {
-        acSheets = seeIfWhole;
-        calculatedBeforeQty = neverMoreThanHKQty(seeIfWhole, hkKg, currHKQty);
-      } else {
-        let rounded = Math.ceil(seeIfWhole);
-        acSheets = rounded;
-        calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
-      }
-      hk = markHKAdded(hk, result, true, calculatedBeforeQty);
+      let getOutput = round(result, bdActualBeforeQty);
+      calculatedBeforeQty = getOutput.calculatedBeforeQty;
+      acSheets = getOutput.acSheets;
+      // let getDuplicates = shouldDuplicate(
+      //   hk,
+      //   currHK,
+      //   bd,
+      //   calculatedBeforeQty,
+      //   acSheets
+      // );
+      // hk = getDuplicates.hk;
+      // bd = getDuplicates.bd;
+      hk = markHKAdded(hk, result, true, getOutput.calculatedBeforeQty);
     } else {
       // the other else
       let filteredBD = _.filter(bd, {
@@ -129,18 +146,12 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
     if (currHKQty > bdActualBeforeQty) {
       if (bdActualBeforeQty == 0) {
       } else {
-        let seeIfWhole = bdActualBeforeQty / hkKg;
-        if (Number.isInteger(seeIfWhole)) {
-          calculatedBeforeQty = neverMoreThanHKQty(seeIfWhole, hkKg, currHKQty);
-          acSheets = seeIfWhole;
-        } else {
-          let rounded = Math.ceil(seeIfWhole);
-          acSheets = rounded;
-          calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
-        }
+        let getOutput = round(currHK, bdActualBeforeQty);
+        calculatedBeforeQty = getOutput.calculatedBeforeQty;
+        acSheets = getOutput.acSheets;
       }
     } else {
-      calculatedBeforeQty = currHKQty;
+      calculatedBeforeQty = currHK.qty;
     }
     let getDuplicates = shouldDuplicate(
       hk,
@@ -166,6 +177,8 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
 }
 
 function markBefores(hk, bd, test) {
+  hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["desc", "desc"]);
+  bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   for (let i = 0; i < hk.length; i++) {
     let materialNo = hk[i].materialNo;
     if (!hk[i].added) {
@@ -181,8 +194,6 @@ function markBefores(hk, bd, test) {
       }
     }
   }
-  hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["desc", "desc"]);
-  bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
 }
 

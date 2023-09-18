@@ -24,7 +24,7 @@ describe("edge4", function () {
     getOutput = output;
   });
 
-  it("should assign bd correctly", function () {
+  it("sc should remain the same depending on bd", function () {
     let materialNo = "TAC11154930";
     let output = markBefores(getHK, getBD, materialNo);
     let getAfters = markAfters(output.hk, output.bd, materialNo);

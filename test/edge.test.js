@@ -24,7 +24,7 @@ describe("edge", function () {
     getOutput = output;
   });
 
-  it("should assign bd correctly", function () {
+  it("should assign bd correctly, if there's many to many", function () {
     let output = markBefores(getHK, getBD, "TAC11181200");
     let getAfters = markAfters(output.hk, output.bd);
     let result = onlyTestVariables(getAfters.hk, getOutput);

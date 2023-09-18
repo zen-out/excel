@@ -24,14 +24,11 @@ describe("edge2", function () {
     getOutput = output;
   });
 
-  it("should assign bd correctly", function () {
+  it("SC should maintain the same depending on bd", function () {
     let materialNo = "TAC00083840";
     let output = markBefores(getHK, getBD, materialNo);
     let getAfters = markAfters(output.hk, output.bd, materialNo);
     let result = onlyTestVariables(getAfters.hk, getOutput);
     expect(result.getHK).to.deep.equal(result.getOutput);
-    // let first = _.filter(result.getHK, { qty: 0 });
-    // let outputFirst = _.filter(result.getOutput, { qty: 0.65 });
-    // expect(first).to.deep.equal(outputFirst);
   });
 });

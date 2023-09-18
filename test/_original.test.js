@@ -6,7 +6,7 @@ const { onlyTestVariables } = require("../javascript/tests.js");
 const chai = require("chai");
 const expect = chai.expect;
 
-describe("beforeFunctions", function () {
+describe("_original", function () {
   let getHK;
   let getBD;
   let getOutput;

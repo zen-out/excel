@@ -98,7 +98,6 @@ function markAfters(hk, bd, test) {
       hk[i].airOrShip = "SC";
       if (hkSum > actualQuantity) {
       } else if (hk[i].qty < actualQuantity) {
-        console.log(hk[i], "hereeee");
       } else if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;
       }

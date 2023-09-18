@@ -82,7 +82,7 @@ const output = [
     description: "Acetate#VLA2A110 168x700x6.0/0.92",
     kg: 0.92,
     added: false,
-    qty: 3.6799999999999997,
+    qty: 0.9,
     airOrShip: "SC",
     remarks: "拆一條空運，其余船運",
   },
