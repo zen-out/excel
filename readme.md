@@ -1,26 +1,37 @@
-# Conversion 
+# Excel Conversion
 
-## Requirements
-
-- For BD: 
--- 
-
--- If Assign Maximum in Transit Date is later than Date of Issue, account for the allocate in transite warehouse. Otherwise, take the owed quantity. 
+## Prerequisites
+- Install github desktop
+- Install node.js 
 
 ## Install 
-1. Go to your terminal / command prompt and 
+0. Go to github desktop and 
+
+1. Go to your terminal / command prompt and cd into the folder
+(cd means change directory)
+
+e.g., 
+```cd desktop```
+```cd excel```
+
+To go outside of a directory, type in 
+```cd.. ```
+Make sure you are in the directory excel
 
 2. Create a data folder (in the same level as this file)
 
-3. Put in your 
+3. Put in your files 
 
-4. Go to variables.js and change the file names 
+4. Go to variables.js and change the variables
 
 5. Go back to your terminal, make sure you are in the current directory 
--- cd desktop
--- cd 
--- node run.js 
+(it should list it as excel)
 
-6. Your files should be in the output folder 
+- type in 
+```npm install```
+```node index```
+
+6. Your files should be in the data folder 
+
 
 
