@@ -30,7 +30,6 @@ function duplicateItemWithSC(hk, obj, number) {
 }
 
 function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
-  // let filteredBD = _.filter(bd, { materialNo: hkObject.materialNo });
   if (hkObject.qty > calculatedBefore) {
     let otherBDs = _.filter(bd, function (item) {
       return (
@@ -46,10 +45,15 @@ function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
     });
     hk = markHKAdded(hk, otherHKs);
     bd = markBDAdded(bd, otherBDs);
-    let scQty = hkObject.qty - calculatedBefore;
-    hkObject.remarks = `拆${acSheets}条空运其余船运`;
-    hk = duplicateItemWithSC(hk, hkObject, scQty);
+    let lessThanOneSheet = hkObject.qty - calculatedBefore;
+    if (lessThanOneSheet < hkObject.kg) {
+      hk = markHKAdded(hk, hkObject, false);
+    } else {
+      hkObject.remarks = `拆${acSheets}条空运其余船运`;
+      hk = duplicateItemWithSC(hk, hkObject, lessThanOneSheet);
+    }
   }
+
   return { hk, bd };
 }
 
@@ -132,7 +136,6 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
         } else {
           let rounded = Math.ceil(seeIfWhole);
           acSheets = rounded;
-
           calculatedBeforeQty = neverMoreThanHKQty(rounded, hkKg, currHKQty);
         }
       }
@@ -148,7 +151,12 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
     );
     hk = getDuplicates.hk;
     bd = getDuplicates.bd;
-    hk = markHKAdded(hk, currHK, true, calculatedBeforeQty);
+    let lessThanOneSheet = currHK.qty - calculatedBeforeQty;
+    if (lessThanOneSheet < currHK.kg) {
+      hk = markHKAdded(hk, currHK, true);
+    } else {
+      hk = markHKAdded(hk, currHK, true, calculatedBeforeQty);
+    }
   }
   if (!acSheets) {
     acSheets = null;
@@ -166,7 +174,6 @@ function markBefores(hk, bd, test) {
         bd_filter,
         test
       );
-
       bd = markedBDs;
       if (test == materialNo) {
         // console.log(materialNo, actualQuantity, airShipFlag);

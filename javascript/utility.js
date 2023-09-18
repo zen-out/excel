@@ -46,6 +46,8 @@ function markHKAdded(array, arrayOrObject, addAC, quantity) {
     array[foundIdx].added = true;
     if (addAC) {
       array[foundIdx].airOrShip = "AC";
+    } else {
+      array[foundIdx].airOrShip = "SC";
     }
     if (quantity) {
       array[foundIdx].qty = quantity;
