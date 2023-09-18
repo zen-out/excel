@@ -25,7 +25,7 @@ describe("beforeFunctions", function () {
   });
 
   it("should assign bd correctly", function () {
-    let materialNo = "TAC00083840";
+    let materialNo = "TAC11154930";
     let output = markBefores(getHK, getBD, materialNo);
     let getAfters = markAfters(output.hk, output.bd, materialNo);
     let result = onlyTestVariables(getAfters.hk, getOutput);

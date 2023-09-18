@@ -17,9 +17,6 @@ function duplicateItemWithSC(hk, obj, number) {
       duplicate.added = true;
       number = parseFloat(number.toFixed(2));
       duplicate.qty = number;
-      if (obj.materialNo.includes("70840")) {
-        // console.log("hi", duplicate);
-      }
     } else {
       duplicate.added = false;
     }
@@ -72,11 +69,11 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
         if (assignMaxIsLater) {
           airShipFlag = true;
           actualQuantity = actualQuantity + currBD.owedQty;
-          bd = markBDAdded(bd, currBD);
+          // bd = markBDAdded(bd, currBD);
         } else {
           actualQuantity += currBD.materialShortageAfterInventory;
           airShipFlag = true;
-          bd = markBDAdded(bd, currBD);
+          // bd = markBDAdded(bd, currBD);
         }
       }
     }
@@ -108,7 +105,6 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
     let result = _.find(sortedArr, function (item) {
       return item.qty > bdActualBeforeQty;
     });
-
     if (result) {
       currHKQty = result.qty;
       hkKg = result.kg;
@@ -123,7 +119,10 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       }
       hk = markHKAdded(hk, result, true, calculatedBeforeQty);
     } else {
-      // lol
+      let filteredBD = _.filter(bd, { materialNo: materialNo, before: true });
+      if (filteredBD.length) {
+        hk = markHKAdded(hk, currHK, true);
+      }
     }
   } else {
     if (currHKQty > bdActualBeforeQty) {
@@ -175,9 +174,6 @@ function markBefores(hk, bd, test) {
         test
       );
       bd = markedBDs;
-      if (test == materialNo) {
-        // console.log(materialNo, actualQuantity, airShipFlag);
-      }
       if (airShipFlag) {
         hk = getBeforeQty(hk, hk[i], bd, actualQuantity, test);
       }

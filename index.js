@@ -36,7 +36,7 @@ function doubleCheckTest() {
   const { getOutput, getHK, getBD } = getFiles.init(true);
   // console.log(_.filter(getBD, { materialNo: "TAC11187850" }));
   // console.log(_.filter(getHK, { materialNo: "TAC11187850" }));
-  console.log(_.filter(getOutput, { materialNo: "TAC11187850" }));
+  // console.log(_.filter(getOutput, { materialNo: "TAC11187850" }));
 
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd, materialNo);
