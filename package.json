@@ -24,6 +24,7 @@
     "edge3": "mocha test/edge3.test.js",
     "edge4": "mocha test/edge4.test.js",
     "edge5": "mocha test/edge5.test.js",
+    "edge6": "mocha test/edge6.test.js",
     "og": "mocha test/original.test.js"
   },
   "repository": {

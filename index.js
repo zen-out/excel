@@ -11,12 +11,13 @@ const {
   BD_FILE,
   OUTPUT_FILE,
   ANSWERS_FILE,
+  CURRENT_DATE,
 } = require("./javascript/variables.js");
 
 function doubleCheckTest() {
   let materialNo = "TAC00012070";
   let getFiles = new ReadAndWrite(HK_FILE, BD_FILE, ANSWERS_FILE);
-  const { getOutput, getHK, getBD } = getFiles.init(true);
+  const { getOutput, getHK, getBD } = getFiles.init(CURRENT_DATE);
   // console.log(getBD[0]);
   // console.log(_.filter(getBD, { materialNo: "TAC11188060" }));
   // console.log(_.filter(getHK, { materialNo: "TAC11188060" }));

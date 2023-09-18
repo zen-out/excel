@@ -81,7 +81,7 @@ function getBeforeActualQuantity(bd, bd_filter, test) {
     actualQuantity = actualQuantity.toFixed(3);
     actualQuantity = parseFloat(actualQuantity);
   }
-  if (actualQuantity == 0) {
+  if (actualQuantity < 0) {
     airShipFlag = false;
   }
   let markedBDs = bd;

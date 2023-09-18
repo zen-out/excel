@@ -14,7 +14,7 @@ const {
 } = require("./javascript/variables.js");
 
 function doubleCheckTest() {
-  let materialNo = "TAC00012070";
+  let materialNo = "TAC00102920";
   let getFiles = new ReadAndWrite(
     "./data/hkor.wrong.xlsx",
     "./data/bdor.wrong.xlsx",
@@ -22,9 +22,9 @@ function doubleCheckTest() {
   );
   const { getOutput, getHK, getBD } = getFiles.init(new Date(), true);
 
-  console.log(_.filter(getBD, { materialNo: materialNo }));
-  // console.log(_.filter(getHK, { materialNo: materialNo}));
-  // console.log(_.filter(getOutput, { materialNo: materialNo }));
+  // console.log(_.filter(getBD, { materialNo: materialNo }));
+  // console.log(_.filter(getHK, { materialNo: materialNo }));
+  console.log(_.filter(getOutput, { materialNo: materialNo }));
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd, materialNo);
   // getFiles.createFile(getAfters.hk, OUTPUT_FILE);
