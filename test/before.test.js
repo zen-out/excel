@@ -1,20 +1,6 @@
 const _ = require("lodash");
-const {
-  duplicateBefore,
-  shouldDuplicate,
-  getBeforeActualQuantity,
-  getBeforeQty,
-  markBefores,
-} = require("../javascript/before.js");
-const {
-  getNextWedAndDays,
-  isSecondDateLater,
-} = require("../javascript/dates.js");
+const { getBeforeActualQuantity } = require("../javascript/before.js");
 const { getFiltered } = require("../javascript/utility.js");
-const {
-  FORMAT_DATE_OF_ISSUE,
-  FORMAT_ASSIGN_MAX_DATE,
-} = require("../javascript/variables.js");
 const { hk, bd, output } = require("../testData/dates.js");
 const chai = require("chai");
 const expect = chai.expect;

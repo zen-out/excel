@@ -4,10 +4,6 @@ const {
   isSecondDateLater,
 } = require("../javascript/dates.js");
 const { getFiltered } = require("../javascript/utility.js");
-const {
-  FORMAT_DATE_OF_ISSUE,
-  FORMAT_ASSIGN_MAX_DATE,
-} = require("../javascript/variables.js");
 const { hk, bd, output } = require("../testData/dates.js");
 const chai = require("chai");
 const expect = chai.expect;

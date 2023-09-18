@@ -1,12 +1,6 @@
 const _ = require("lodash");
 const { hk, bd, output } = require("../testData/81200.js");
-const {
-  duplicateBefore,
-  shouldDuplicate,
-  getBeforeActualQuantity,
-  getBeforeQty,
-  markBefores,
-} = require("../javascript/before.js");
+const { markBefores } = require("../javascript/before.js");
 const { markAfters } = require("../javascript/after.js");
 const { onlyTestVariables } = require("../javascript/tests.js");
 const chai = require("chai");
