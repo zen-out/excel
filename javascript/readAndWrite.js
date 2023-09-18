@@ -31,13 +31,15 @@ class ReadAndWrite {
     this.bdFile = this.readFile(BD_FILE);
     this.answerFile = this.readFile(ANSWERS_FILE);
   }
-  init(test) {
-    let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE);
-    // getOutput = this.keepKeysTesting(getOutput, "hk");
-    let getHK = this.reassignKeys(this.hkFile, "hk", CURRENT_DATE);
-    // getHK = this.keepKeysTesting(getHK, "hk");
-    let getBD = this.reassignKeys(this.bdFile, "bd", CURRENT_DATE);
-    // getBD = this.keepKeysTesting(getBD, "bd");
+  init(date, test) {
+    let getOutput = this.reassignKeys(this.answerFile, "hk", date);
+    let getHK = this.reassignKeys(this.hkFile, "hk", date);
+    let getBD = this.reassignKeys(this.bdFile, "bd", date);
+    if (test) {
+      getOutput = this.keepKeysTesting(getOutput, "hk");
+      getHK = this.keepKeysTesting(getHK, "hk");
+      getBD = this.keepKeysTesting(getBD, "bd");
+    }
     return { getOutput, getHK, getBD };
   }
   readFile(file) {

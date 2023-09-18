@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { hk, bd, output } = require("../testData/81200.js");
+const { hk, bd, output } = require("../testData/sept15/81200.js");
 const { markBefores } = require("../javascript/before.js");
 const { markAfters } = require("../javascript/after.js");
 const { onlyTestVariables } = require("../javascript/tests.js");

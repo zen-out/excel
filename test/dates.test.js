@@ -4,7 +4,7 @@ const {
   isSecondDateLater,
 } = require("../javascript/dates.js");
 const { getFiltered } = require("../javascript/utility.js");
-const { hk, bd, output } = require("../testData/dates.js");
+const { hk, bd, output } = require("../testData/sept15/dates.js");
 const chai = require("chai");
 const expect = chai.expect;
 

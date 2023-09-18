@@ -1,5 +1,5 @@
 const _ = require("lodash");
-const { hk, bd, output } = require("../testData/87850.js");
+const { hk, bd, output } = require("../testData/sept15/87850.js");
 const {
   duplicateBefore,
   shouldDuplicate,

@@ -8,15 +8,15 @@ const CURRENT_DATE = new Date("2023-09-15");
 const FORMAT_DATE_OF_ISSUE = "MM/dd/yy";
 const FORMAT_ASSIGN_MAX_DATE = "MM/dd/yy";
 const HK_ITEM_NUMBER = "D";
-const HK_ITEM_DESCRIPTION = "G";
-const HK_QTY = "I";
-const HK_ACORSC = "M";
-const HK_REMARKS = "Q";
-const BD_DATE_OF_ISSUE = "W";
-const BD_MATERIAL_NUMBER = "Y";
-const BD_OWED_QUANTITY = "AQ";
-const BD_ASSIGN_MAX_IN_TRANSIT_DATE = "BA";
-const BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION = "BB";
+const HK_ITEM_DESCRIPTION = "F";
+const HK_QTY = "H";
+const HK_ACORSC = "K";
+const HK_REMARKS = "L";
+const BD_DATE_OF_ISSUE = "Y";
+const BD_MATERIAL_NUMBER = "AA";
+const BD_OWED_QUANTITY = "AB";
+const BD_ASSIGN_MAX_IN_TRANSIT_DATE = "AE";
+const BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION = "AF";
 module.exports = {
   HK_FILE,
   BD_FILE,
