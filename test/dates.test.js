@@ -1,8 +1,5 @@
 const _ = require("lodash");
-const { ReadAndWrite } = require("../javascript/readAndWrite.js");
 const {
-  convertToDate,
-  excelDateToJSDate,
   getNextWedAndDays,
   isSecondDateLater,
 } = require("../javascript/dates.js");
@@ -11,28 +8,19 @@ const {
   FORMAT_DATE_OF_ISSUE,
   FORMAT_ASSIGN_MAX_DATE,
 } = require("../javascript/variables.js");
-const bdor = "./testData/bdor_test.xlsx";
-const hkor = "./testData/hkor_test.xlsx";
-const output = "./testData/output_test.xlsx";
+const { hk, bd, output } = require("../testData/dates.js");
 const chai = require("chai");
 const expect = chai.expect;
 
 describe("convertToDate", function () {
-  let readAndWrite;
-  let getOutput;
   let getHK;
   let getBD;
+  let getOutput;
 
   before(function () {
-    readAndWrite = new ReadAndWrite(
-      "./testData/hkor_test.xlsx",
-      "./testData/bdor_test.xlsx",
-      "./testData/output_test.xlsx"
-    );
-    let result = readAndWrite.init();
-    getOutput = readAndWrite.keepKeysTesting(result.getOutput, "hk");
-    getHK = readAndWrite.keepKeysTesting(result.getHK, "hk");
-    getBD = readAndWrite.keepKeysTesting(result.getBD, "bd");
+    getHK = hk;
+    getBD = bd;
+    getOutput = output;
   });
 
   it("should correctly convert string to date", function () {

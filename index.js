@@ -34,9 +34,9 @@ function doubleCheckTest() {
     DOUBLE_CHECK_OUTPUT
   );
   const { getOutput, getHK, getBD } = getFiles.init(true);
-  // console.log(_.filter(getBD, { materialNo: "TAC11187850" }));
-  // console.log(_.filter(getHK, { materialNo: "TAC11187850" }));
-  // console.log(_.filter(getOutput, { materialNo: "TAC11187850" }));
+  // console.log(_.filter(getBD, { materialNo: "TAC11188060" }));
+  // console.log(_.filter(getHK, { materialNo: "TAC11188060" }));
+  // console.log(_.filter(getOutput, { materialNo: "TAC11188060" }));
 
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd, materialNo);
@@ -62,10 +62,7 @@ function alwaysRunThisTest() {
     // "./testData/output_test.xlsx"
   );
   const { getOutput, getHK, getBD } = getFiles.init();
-  // console.log(_.filter(getBD, { materialNo: "TAC00083840" }));
-  // console.log(_.filter(getHK, { materialNo: "TAC00083840" }));
-  // console.log(_.filter(getOutput, { materialNo: "TAC00083840" }));
-
+  // console.log(getBD);
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd);
   runTest(getOutput, getAfters.hk, true);
