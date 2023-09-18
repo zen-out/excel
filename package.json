@@ -21,6 +21,7 @@
     "dates": "mocha test/dates.test.js",
     "edge": "mocha test/edge.test.js",
     "edge2": "mocha test/edge2.test.js",
+    "edge3": "mocha test/edge3.test.js",
     "og": "mocha test/original.test.js"
   },
   "repository": {
