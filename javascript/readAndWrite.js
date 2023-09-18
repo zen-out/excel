@@ -32,16 +32,12 @@ class ReadAndWrite {
     this.answerFile = this.readFile(ANSWERS_FILE);
   }
   init(test) {
-    let getOutput = this.reassignKeys(
-      this.answerFile,
-      "hk",
-      new Date("2023-09-15")
-    );
-    getOutput = this.keepKeysTesting(getOutput, "hk");
-    let getHK = this.reassignKeys(this.hkFile, "hk", new Date("2023-09-15"));
-    getHK = this.keepKeysTesting(getHK, "hk");
-    let getBD = this.reassignKeys(this.bdFile, "bd", new Date("2023-09-15"));
-    getBD = this.keepKeysTesting(getBD, "bd");
+    let getOutput = this.reassignKeys(this.answerFile, "hk", CURRENT_DATE);
+    // getOutput = this.keepKeysTesting(getOutput, "hk");
+    let getHK = this.reassignKeys(this.hkFile, "hk", CURRENT_DATE);
+    // getHK = this.keepKeysTesting(getHK, "hk");
+    let getBD = this.reassignKeys(this.bdFile, "bd", CURRENT_DATE);
+    // getBD = this.keepKeysTesting(getBD, "bd");
     return { getOutput, getHK, getBD };
   }
   readFile(file) {
@@ -112,7 +108,7 @@ class ReadAndWrite {
     // Add the worksheet to the workbook.
     reader.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     // Write the workbook to a new Excel file.
-    reader.writeFile(workbook, `./data/${outputFile}`, {
+    reader.writeFile(workbook, `${outputFile}`, {
       bookType: "xlsx",
       type: "binary",
     });
@@ -181,11 +177,9 @@ class ReadAndWrite {
             if (newKeys[keyIndex] === "materialNo") {
               let trimmed = obj[key].trim();
               newObj[newKeys[keyIndex]] = trimmed;
-            }
-            if (newKeys[keyIndex] === "materialShortageAfterInventory") {
+            } else if (newKeys[keyIndex] === "materialShortageAfterInventory") {
               newObj[newKeys[keyIndex]] = obj[key];
-            }
-            if (newKeys[keyIndex] === "dateOfIssue") {
+            } else if (newKeys[keyIndex] === "dateOfIssue") {
               let dateOfIssue = convertToDate(
                 obj[key],
                 FORMAT_DATE_OF_ISSUE,
@@ -200,16 +194,14 @@ class ReadAndWrite {
                 newObj["before"] = true;
               }
               newObj["added"] = false;
-            }
-            if (newKeys[keyIndex] === "assignMaxInTransit") {
+            } else if (newKeys[keyIndex] === "assignMaxInTransit") {
               let assignMax = convertToDate(
                 obj[key],
                 FORMAT_ASSIGN_MAX_DATE,
                 test
               );
               newObj["assignMaxInTransit"] = assignMax;
-            }
-            if (newKeys[keyIndex] === "owedQty") {
+            } else if (newKeys[keyIndex] === "owedQty") {
               let addWeight = obj[key] + WEIGHT_TO_ADD;
               newObj["owedQty"] = addWeight;
             }
@@ -217,21 +209,21 @@ class ReadAndWrite {
             if (newKeys[keyIndex] === "materialNo") {
               let trimmed = obj[key].trim();
               newObj[newKeys[keyIndex]] = trimmed;
-            }
-            if (
+            } else if (
               newKeys[keyIndex] === "remarks" ||
               newKeys[keyIndex] === "qty" ||
               newKeys[keyIndex] === "airOrShip"
             ) {
               newObj[newKeys[keyIndex]] = obj[key];
-            }
-            if (newKeys[keyIndex] === "description") {
+            } else if (newKeys[keyIndex] === "description") {
               newObj[newKeys[keyIndex]] = obj[key];
               let kg = this.getWeight(obj[key]);
               newObj["kg"] = kg;
               newObj["added"] = false;
             }
           }
+        } else {
+          newObj[key] = obj[key];
         }
       });
 
@@ -257,7 +249,7 @@ class ReadAndWrite {
       delete newObj.materialNo;
       delete newObj.description;
       delete newObj.qty;
-      // TO DO: do you need this?
+      delete newObj.correct;
       delete newObj.added;
       delete newObj.kg;
       delete newObj.airOrShip;

@@ -20,11 +20,14 @@ To go outside of a directory, type in
 ```cd.. ```
 Make sure you are in the directory excel
 
+![clone github](./images/cd.png)
+
 ### Create a data folder (in the same level as this file)
 
 ![clone github](./images/data.png)
 ### Put in your files into the data folder
 
+![clone github](./images/dataFiles.png)
 ### Go to variables.js and change the variables
 
 ![clone github](./images/variables.png)
@@ -35,6 +38,8 @@ Make sure you are in the directory excel
 ```npm install```
 ```node index```
 
+
+![clone github](./images/npminstall.png)
 ### Your files should be in the data folder 
 
 

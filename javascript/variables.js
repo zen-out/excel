@@ -1,6 +1,7 @@
 const HK_FILE = "./data/hkor.xlsx";
 const BD_FILE = "./data/bdor.xlsx";
-const OUTPUT_FILE = "./data/hkor.outputwithanswers.xlsx";
+const ANSWERS_FILE = "./data/hkor.outputwithanswers.xlsx";
+const OUTPUT_FILE = "./data/output.xlsx";
 const DAYS_TO_ADD = 35;
 const WEIGHT_TO_ADD = 0;
 const CURRENT_DATE = new Date("2023-09-15");
@@ -19,6 +20,7 @@ const BD_MATERIAL_SHORTAGE_AFTER_INVENTORY_ALLOCATION = "BB";
 module.exports = {
   HK_FILE,
   BD_FILE,
+  ANSWERS_FILE,
   OUTPUT_FILE,
   DAYS_TO_ADD,
   WEIGHT_TO_ADD,
