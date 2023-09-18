@@ -18,7 +18,7 @@ describe("edge6", function () {
     getOutput = output;
   });
 
-  it("should assign bd correctly", function () {
+  it("should account for negative numbers", function () {
     let materialNo = "TAC00102920";
     let output = markBefores(getHK, getBD, materialNo);
     // console.log(output.bd);

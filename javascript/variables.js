@@ -7,6 +7,8 @@ const WEIGHT_TO_ADD = 0;
 const CURRENT_DATE = new Date("2023-09-15");
 const FORMAT_DATE_OF_ISSUE = "MM/dd/yy";
 const FORMAT_ASSIGN_MAX_DATE = "MM/dd/yy";
+// 1 is Monday and 7 is Sunday
+const NEXT_SHIPPING = 3;
 const HK_ITEM_NUMBER = "D";
 const HK_ITEM_DESCRIPTION = "F";
 const HK_QTY = "H";
@@ -24,6 +26,7 @@ module.exports = {
   OUTPUT_FILE,
   DAYS_TO_ADD,
   WEIGHT_TO_ADD,
+  NEXT_SHIPPING,
   CURRENT_DATE,
   FORMAT_DATE_OF_ISSUE,
   FORMAT_ASSIGN_MAX_DATE,

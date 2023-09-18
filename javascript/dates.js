@@ -1,5 +1,5 @@
 const { DateTime, Duration } = require("luxon");
-const { FORMAT_DATE_OF_ISSUE } = require("./variables.js");
+const { FORMAT_DATE_OF_ISSUE, NEXT_SHIPPING } = require("./variables.js");
 // change to luxon date parameter
 
 function excelDateToJSDate(serial) {
@@ -30,7 +30,7 @@ function convertToDate(stringOrNum, format, test) {
 
 function getNextWedAndDays(jsDate) {
   let date = DateTime.fromJSDate(jsDate);
-  while (date.weekday !== 3) {
+  while (date.weekday !== NEXT_SHIPPING) {
     date = date.plus({ days: 1 });
   }
   date = date.plus({ days: 35 });
