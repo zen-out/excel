@@ -11,6 +11,7 @@ function duplicateBefore(hk, obj, number) {
   if (index !== -1) {
     let duplicate = JSON.parse(JSON.stringify(hk[index]));
     duplicate.airOrShip = "SC";
+
     if (typeof number == "number") {
       duplicate.added = true;
       number = parseFloat(number.toFixed(2));
@@ -18,6 +19,7 @@ function duplicateBefore(hk, obj, number) {
     } else {
       duplicate.added = false;
     }
+
     hk.push(duplicate);
   }
   return hk;
@@ -37,7 +39,7 @@ function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
         item.materialNo === hkObject.materialNo && !_.isEqual(item, hkObject)
       );
     });
-    hk = markHKAdded(hk, otherHKs);
+    // hk = markHKAdded(hk, otherHKs);
     bd = markBDAdded(bd, otherBDs);
     let lessThanOneSheet = hkObject.qty - calculatedBefore;
     if (lessThanOneSheet < hkObject.kg) {
@@ -122,15 +124,15 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       let getOutput = round(result, bdActualBeforeQty);
       calculatedBeforeQty = getOutput.calculatedBeforeQty;
       acSheets = getOutput.acSheets;
-      // let getDuplicates = shouldDuplicate(
-      //   hk,
-      //   currHK,
-      //   bd,
-      //   calculatedBeforeQty,
-      //   acSheets
-      // );
-      // hk = getDuplicates.hk;
-      // bd = getDuplicates.bd;
+      let getDuplicates = shouldDuplicate(
+        hk,
+        result,
+        bd,
+        calculatedBeforeQty,
+        acSheets
+      );
+      hk = getDuplicates.hk;
+      bd = getDuplicates.bd;
       hk = markHKAdded(hk, result, true, getOutput.calculatedBeforeQty);
     } else {
       // the other else

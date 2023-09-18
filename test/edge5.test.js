@@ -29,7 +29,7 @@ describe("edge5", function () {
     let output = markBefores(getHK, getBD, materialNo);
     let getAfters = markAfters(output.hk, output.bd, materialNo);
     let result = onlyTestVariables(getAfters.hk, getOutput);
-    let filtered = _.filter(getAfters.hk, { qty: 1.84 });
+    let filtered = _.filter(result.getHK, { qty: 1.84 });
     let filtered2 = _.filter(result.getOutput, { qty: 1.84 });
     expect(result.getHK.length).to.equal(3);
     expect(filtered).to.deep.equal(filtered2);
@@ -50,8 +50,8 @@ describe("edge5", function () {
     let getAfters = markAfters(output.hk, output.bd, materialNo);
     let result = onlyTestVariables(getAfters.hk, getOutput);
     // console.log(result.getHK);
-    let filtered = _.filter(result.getHK, { qty: 2.76 });
-    let filtered2 = _.filter(result.getOutput, { qty: 2.76 });
+    let filtered = _.filter(result.getHK, { qty: 0.9 });
+    let filtered2 = _.filter(result.getOutput, { qty: 0.9 });
     expect(filtered).to.deep.equal(filtered2);
   });
 });
