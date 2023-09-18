@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { hk, bd, output } = require("../testData/87850.js");
 const {
-  duplicateItemWithSC,
+  duplicateBefore,
   shouldDuplicate,
   getBeforeActualQuantity,
   getBeforeQty,

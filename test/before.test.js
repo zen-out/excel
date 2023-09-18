@@ -2,7 +2,7 @@ const _ = require("lodash");
 const { ReadAndWrite } = require("../javascript/readAndWrite.js");
 const { getFiltered } = require("../javascript/utility.js");
 const {
-  duplicateItemWithSC,
+  duplicateBefore,
   shouldDuplicate,
   getBeforeActualQuantity,
   getBeforeQty,

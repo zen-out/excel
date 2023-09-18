@@ -78,10 +78,11 @@ function markAfters(hk, bd, test) {
       let hkSum = sumOfCurrentHK(hk, materialNo);
       hk[i].airOrShip = "SC";
       if (hkSum > actualQuantity) {
+      } else if (hk[i].qty < actualQuantity) {
+        // duplicate here
+        console.log("this condition", actualQuantity, hk[i].qty);
       } else if (hk[i].qty < hk[i].kg) {
         hk[i].qty = hk[i].kg;
-      } else if (hk[i].qty < actualQuantity) {
-        console.log("this condition");
       }
       hk = markHKAdded(hk, hk[i]);
     }

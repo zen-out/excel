@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { hk, bd, output } = require("../testData/88060.js");
 const {
-  duplicateItemWithSC,
+  duplicateBefore,
   shouldDuplicate,
   getBeforeActualQuantity,
   getBeforeQty,
@@ -32,6 +32,15 @@ describe("beforeFunctions", function () {
     let filtered = _.filter(getAfters.hk, { qty: 1.84 });
     let filtered2 = _.filter(result.getOutput, { qty: 1.84 });
     expect(result.getHK.length).to.equal(3);
+    expect(filtered).to.deep.equal(filtered2);
+  });
+  it("should assign before correctly", function () {
+    let materialNo = "TAC11188060";
+    let output = markBefores(getHK, getBD, materialNo);
+    let getAfters = markAfters(output.hk, output.bd, materialNo);
+    let result = onlyTestVariables(getAfters.hk, getOutput);
+    let filtered = _.filter(result.getHK, { qty: 1.84 });
+    let filtered2 = _.filter(result.getOutput, { qty: 1.84 });
     expect(filtered).to.deep.equal(filtered2);
   });
 });

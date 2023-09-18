@@ -6,7 +6,7 @@ const {
   getFiltered,
 } = require("./utility.js");
 const { isSecondDateLater } = require("./dates.js");
-function duplicateItemWithSC(hk, obj, number) {
+function duplicateBefore(hk, obj, number) {
   let index = _.findIndex(hk, obj);
   if (index !== -1) {
     let duplicate = JSON.parse(JSON.stringify(hk[index]));
@@ -44,7 +44,7 @@ function shouldDuplicate(hk, hkObject, bd, calculatedBefore, acSheets) {
       hk = markHKAdded(hk, hkObject, false);
     } else {
       hkObject.remarks = `拆${acSheets}条空运其余船运`;
-      hk = duplicateItemWithSC(hk, hkObject, lessThanOneSheet);
+      hk = duplicateBefore(hk, hkObject, lessThanOneSheet);
     }
   }
 
@@ -180,13 +180,13 @@ function markBefores(hk, bd, test) {
       }
     }
   }
-  hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["asc", "asc"]);
-  bd = _.orderBy(bd, ["owedQty"], ["desc"]);
+  // hk = _.orderBy(hk, ["airOrShip", "materialNo"], ["asc", "asc"]);
+  // bd = _.orderBy(bd, ["owedQty"], ["desc"]);
   return { hk, bd };
 }
 
 module.exports = {
-  duplicateItemWithSC,
+  duplicateBefore,
   shouldDuplicate,
   getBeforeActualQuantity,
   getBeforeQty,
