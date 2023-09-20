@@ -28,8 +28,9 @@ function convertToDate(stringOrNum, format, test) {
   }
 }
 
+
 function getNextWedAndDays(jsDate) {
-  let date = DateTime.fromJSDate(jsDate);
+  let date = DateTime.fromJSDate(jsDate).setZone('Asia/Hong_Kong');
   while (date.weekday !== NEXT_SHIPPING) {
     date = date.plus({ days: 1 });
   }
