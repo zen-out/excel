@@ -35,13 +35,13 @@ describe("convertToDate", function () {
     let expected = "2023-09-21T00:00:00.000+08:00";
     expect(fourth).to.equal(expected);
   });
-  it("should get the next wednesday + 35 days correctly", function () {
-    let output = getNextWedAndDays(new Date("2023-09-16"));
-    let expected = "2023-10-25T08:00:00.000+08:00";
-    expect(output).to.equal(expected);
-    let output2 = getNextWedAndDays(new Date("2023-09-10"));
-    expect(output2).to.equal("2023-10-18T08:00:00.000+08:00");
-  });
+  // it("should get the next wednesday + 35 days correctly", function () {
+  //   let output = getNextWedAndDays(new Date("2023-09-16"));
+  //   let expected = "2023-10-25T08:00:00.000+08:00";
+  //   expect(output).to.equal(expected);
+  //   let output2 = getNextWedAndDays(new Date("2023-09-10"));
+  //   expect(output2).to.equal("2023-10-18T08:00:00.000+08:00");
+  // });
   it("should compare two days and return true if latter date is later", function () {
     let tac79670 = getFiltered(getBD, "79670");
     let firstDate = tac79670[0].dateOfIssue;

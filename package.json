@@ -25,6 +25,12 @@
     "edge4": "mocha test/edge4.test.js",
     "edge5": "mocha test/edge5.test.js",
     "edge6": "mocha test/edge6.test.js",
+    "edge7": "mocha test/edge7.test.js",
+    "edge8": "mocha test/edge8.test.js",
+    "edge9": "mocha test/edge9.test.js",
+    "edge10": "mocha test/edge10.test.js",
+    "edge11": "mocha test/edge11.test.js",
+    "edge12": "mocha test/edge12.test.js",
     "og": "mocha test/original.test.js"
   },
   "repository": {

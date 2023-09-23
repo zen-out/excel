@@ -8,7 +8,8 @@ const CURRENT_DATE = new Date("2023-09-15");
 const FORMAT_DATE_OF_ISSUE = "MM/dd/yy";
 const FORMAT_ASSIGN_MAX_DATE = "MM/dd/yy";
 // 1 is Monday and 7 is Sunday
-const NEXT_SHIPPING = 3;
+// If it's 0, it means 35 days from the CURRENT_DATE
+const NEXT_SHIPPING = 0;
 const HK_ITEM_NUMBER = "D";
 const HK_ITEM_DESCRIPTION = "F";
 const HK_QTY = "H";

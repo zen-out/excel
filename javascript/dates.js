@@ -30,8 +30,10 @@ function convertToDate(stringOrNum, format, test) {
 
 function getNextWedAndDays(jsDate) {
   let date = DateTime.fromJSDate(jsDate);
-  while (date.weekday !== NEXT_SHIPPING) {
-    date = date.plus({ days: 1 });
+  if (NEXT_SHIPPING > 0) {
+    while (date.weekday !== NEXT_SHIPPING) {
+      date = date.plus({ days: 1 });
+    }
   }
   date = date.plus({ days: 35 });
   return date.toString();

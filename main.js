@@ -2,6 +2,8 @@ console.debug("");
 console.debug("********************* RUN *********************");
 console.debug("");
 const fs = require("fs");
+
+const path = require("path");
 const _ = require("lodash");
 const { runTest, additionalLengthTest } = require("./javascript/tests.js");
 const { markBefores } = require("./javascript/before.js");
@@ -14,6 +16,11 @@ const {
   ANSWERS_FILE,
 } = require("./javascript/variables.js");
 
+let getPath = `./testData/sept23`;
+if (fs.existsSync(getPath)) {
+  fs.rmdirSync(getPath, { recursive: true });
+  console.log(`${getPath} is deleted!`);
+}
 function doubleCheckTest() {
   let materialNo = "TAC00057540";
   let getFiles = new ReadAndWrite(
@@ -29,22 +36,16 @@ function doubleCheckTest() {
   let getAfters = markAfters(hk, bd, materialNo);
   // console.log(getAfters.hk);
   // getFiles.createFile(getAfters.hk, "./data/sample_4.xlsx");
-  // console.log(getOutput[0]);
-  // console.log(getAfters.hk[0]);
   let testOutput = runTest(getOutput, getAfters.hk, true);
+
+  const result = getFiles.init(new Date("2023-09-21"), true);
   for (let i = 0; i < testOutput.difference.length; i++) {
     let obj = testOutput.difference[i];
-    let first = _.filter(getHK, { materialNo: obj.materialNo });
-    let second = _.filter(getBD, { materialNo: obj.materialNo });
-    let third = _.filter(getOutput, { materialNo: obj.materialNo });
-    // console.log(first);
-    // if (first == undefined) {
-    //   console.log(first);
-    // } else {
+    let first = _.filter(result.getHK, { materialNo: obj.materialNo });
+    let second = _.filter(result.getBD, { materialNo: obj.materialNo });
+    let third = _.filter(result.getOutput, { materialNo: obj.materialNo });
     writeData(obj.materialNo, first, second, third);
-    // }
   }
-  // additionalLengthTest(HK_FILE, BD_FILE, ANSWERS_FILE, bd);
 }
 doubleCheckTest();
 
@@ -55,12 +56,11 @@ function writeData(materialNo, hk, bd, output) {
   let output = ${JSON.stringify(output)};
   module.exports = {hk, bd, output};
   `;
-  let path = `./testData/sept23`;
   try {
-    if (!fs.existsSync(path)) {
-      fs.mkdirSync(path, { recursive: true });
+    if (!fs.existsSync(getPath)) {
+      fs.mkdirSync(getPath, { recursive: true });
     }
-    let file = `${path}/${materialNo}.js`;
+    let file = `${getPath}/${materialNo}.js`;
     if (fs.existsSync(file)) {
       // File exists, remove it
       fs.unlinkSync(file);

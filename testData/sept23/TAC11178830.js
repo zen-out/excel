@@ -1,6 +1,0 @@
-
-  let hk = [{"materialNo":"TAC11178830","description":"J-Acetate#AB3029T 170x1400x6.0/1.97","kg":1.97,"added":true,"qty":9.4,"airOrShip":"AC","remarks":""}];
-  let bd = [{"dateOfIssue":"2023-05-13T00:00:00.000+08:00","before":true,"added":true,"materialNo":"TAC11178830","owedQty":0,"assignMaxInTransit":"Invalid DateTime","materialShortageAfterInventory":0},{"dateOfIssue":"2023-05-13T00:00:00.000+08:00","before":true,"added":true,"materialNo":"TAC11178830","owedQty":0,"assignMaxInTransit":"Invalid DateTime","materialShortageAfterInventory":0},{"dateOfIssue":"2023-10-19T00:00:00.000+08:00","before":true,"added":true,"materialNo":"TAC11178830","owedQty":4.551,"assignMaxInTransit":"2023-05-10T00:00:00.000+08:00","materialShortageAfterInventory":0},{"dateOfIssue":"2023-10-30T00:00:00.000+08:00","before":true,"added":true,"materialNo":"TAC11178830","owedQty":10.421,"assignMaxInTransit":"2023-05-10T00:00:00.000+08:00","materialShortageAfterInventory":9.45}];
-  let output = [{"materialNo":"TAC11178830","description":"J-Acetate#AB3029T 170x1400x6.0/1.97","kg":1.97,"added":false,"qty":9.4,"airOrShip":"SC","remarks":""}];
-  module.exports = {hk, bd, output};
-  
