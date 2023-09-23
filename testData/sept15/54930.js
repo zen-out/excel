@@ -73,7 +73,8 @@ const output = [
     kg: 0.62,
     added: false,
     qty: 4.95,
-    airOrShip: "SC",
+    airOrShip: "AC",
+    // airOrShip: "SC",
     remarks: "急走9月15日空運",
   },
 ];

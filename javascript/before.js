@@ -4,6 +4,7 @@ const {
   markBDAdded,
   neverMoreThanHKQty,
   getFiltered,
+  markHKBeforeAC,
 } = require("./utility.js");
 const { isSecondDateLater } = require("./dates.js");
 function duplicateBefore(hk, obj, number) {
@@ -115,7 +116,24 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
     materialNo: currHK.materialNo,
     added: false,
   });
+
   if (filteredHK.length > 1) {
+    let filteredBDBefore = _.filter(bd, {
+      materialNo: materialNo,
+      before: true,
+    });
+
+    const bdBeforeSum = _.reduce(
+      filteredBDBefore,
+      (total, obj) => {
+        return total + _.get(obj, "owedQty", 0);
+      },
+      0
+    );
+    let filteredBDAfter = _.filter(bd, {
+      materialNo: materialNo,
+      before: false,
+    });
     let sortedArr = _.sortBy(filteredHK, "qty");
     let result = _.find(sortedArr, function (item) {
       return item.qty > bdActualBeforeQty;
@@ -134,15 +152,19 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       hk = getDuplicates.hk;
       bd = getDuplicates.bd;
       hk = markHKAdded(hk, result, true, getOutput.calculatedBeforeQty);
+      // console.log("here");
+
+      console.log("here");
+      console.log(filteredBDBefore.length, filteredBDAfter.length);
+      console.log("hk qty", currHKQty, "bd before sum", bdBeforeSum);
     } else {
-      // the other else
-      let filteredBD = _.filter(bd, {
-        materialNo: materialNo,
-        before: true,
-      });
-      if (filteredBD.length) {
+      if (filteredBDBefore.length) {
         hk = markHKAdded(hk, currHK, true);
       }
+      if (bdBeforeSum > currHKQty) {
+        hk = markHKBeforeAC(hk, currHK);
+      }
+      console.log(hk);
     }
   } else {
     if (currHKQty > bdActualBeforeQty) {

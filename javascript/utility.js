@@ -28,11 +28,24 @@ function markBDAdded(array, arrayOrObject) {
     return array;
   }
 }
+function markHKBeforeAC(array, object) {
+  return _.map(array, function (item) {
+    if (item.materialNo === object.materialNo) {
+      item.added = true;
+      item.airOrShip = "AC";
+    }
+    return item;
+  });
+}
 function markHKAdded(array, arrayOrObject, addAC, quantity) {
   if (Array.isArray(arrayOrObject)) {
     for (let i = 0; i < arrayOrObject.length; i++) {
       let foundIdx = _.findIndex(array, function (item) {
-        return item == arrayOrObject[i];
+        return (
+          item.materialNo == arrayOrObject[i].materialNo &&
+          item.qty == arrayOrObject[i].qty &&
+          item.description == arrayOrObject[i].description
+        );
       });
       if (foundIdx > -1) {
         array[foundIdx].added = true;
@@ -66,4 +79,10 @@ function neverMoreThanHKQty(number, hkKg, currHKQty) {
   }
 }
 
-module.exports = { getFiltered, markBDAdded, markHKAdded, neverMoreThanHKQty };
+module.exports = {
+  markHKBeforeAC,
+  getFiltered,
+  markBDAdded,
+  markHKAdded,
+  neverMoreThanHKQty,
+};

@@ -33,8 +33,9 @@ function doubleCheckTest() {
   // getFiles.createFile(getAfters.hk, "./data/sample_4.xlsx");
   let testOutput = runTest(getOutput, getAfters.hk, true);
 
-  let getPath = `./testData/sept23`;
-  refreshData(getPath, getFiles, testOutput);
+  // below is for refreshing data, no need to run right now
+  // let getPath = `./testData/sept23`;
+  // refreshData(getPath, getFiles, testOutput);
 }
 doubleCheckTest();
 
