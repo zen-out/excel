@@ -1,0 +1,6 @@
+
+  let hk = [{"materialNo":"TAC11173800","description":"J-Acetate#017652CTN 320x360x8.0/1.23","kg":1.23,"added":true,"qty":7.2,"airOrShip":"AC","remarks":""},{"materialNo":"TAC11173800","description":"J-Acetate#017652CTN 320x360x8.0/1.23","kg":1.23,"added":true,"qty":7.2,"airOrShip":"SC","remarks":""}];
+  let bd = [{"dateOfIssue":"2023-09-28T00:00:00.000+08:00","before":true,"added":true,"materialNo":"TAC11173800","owedQty":0,"assignMaxInTransit":"Invalid DateTime","materialShortageAfterInventory":0},{"dateOfIssue":"2023-10-11T00:00:00.000+08:00","before":true,"added":true,"materialNo":"TAC11173800","owedQty":0.168,"assignMaxInTransit":"Invalid DateTime","materialShortageAfterInventory":0.17},{"dateOfIssue":"2023-10-17T00:00:00.000+08:00","before":true,"added":true,"materialNo":"TAC11173800","owedQty":14.056,"assignMaxInTransit":"Invalid DateTime","materialShortageAfterInventory":14.06}];
+  let output = [{"materialNo":"TAC11173800","description":"J-Acetate#017652CTN 320x360x8.0/1.23","kg":1.23,"added":false,"qty":7.2,"airOrShip":"AC","remarks":""},{"materialNo":"TAC11173800","description":"J-Acetate#017652CTN 320x360x8.0/1.23","kg":1.23,"added":false,"qty":7.2,"airOrShip":"AC","remarks":""}];
+  module.exports = {hk, bd, output};
+  
