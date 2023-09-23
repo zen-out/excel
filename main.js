@@ -16,11 +16,6 @@ const {
   ANSWERS_FILE,
 } = require("./javascript/variables.js");
 
-let getPath = `./testData/sept23`;
-if (fs.existsSync(getPath)) {
-  fs.rmdirSync(getPath, { recursive: true });
-  console.log(`${getPath} is deleted!`);
-}
 function doubleCheckTest() {
   let materialNo = "TAC00057540";
   let getFiles = new ReadAndWrite(
@@ -38,18 +33,26 @@ function doubleCheckTest() {
   // getFiles.createFile(getAfters.hk, "./data/sample_4.xlsx");
   let testOutput = runTest(getOutput, getAfters.hk, true);
 
+  let getPath = `./testData/sept23`;
+  refreshData(getPath, getFiles, testOutput);
+}
+doubleCheckTest();
+
+function refreshData(getPath, getFiles, testOutput) {
   const result = getFiles.init(new Date("2023-09-21"), true);
+  if (fs.existsSync(getPath)) {
+    fs.rmdirSync(getPath, { recursive: true });
+    console.log(`${getPath} is deleted!`);
+  }
   for (let i = 0; i < testOutput.difference.length; i++) {
     let obj = testOutput.difference[i];
     let first = _.filter(result.getHK, { materialNo: obj.materialNo });
     let second = _.filter(result.getBD, { materialNo: obj.materialNo });
     let third = _.filter(result.getOutput, { materialNo: obj.materialNo });
-    writeData(obj.materialNo, first, second, third);
+    writeData(getPath, obj.materialNo, first, second, third);
   }
 }
-doubleCheckTest();
-
-function writeData(materialNo, hk, bd, output) {
+function writeData(getPath, materialNo, hk, bd, output) {
   let fileContent = `
   let hk = ${JSON.stringify(hk)};
   let bd = ${JSON.stringify(bd)};
