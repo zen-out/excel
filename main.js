@@ -17,7 +17,7 @@ const {
 } = require("./javascript/variables.js");
 
 function doubleCheckTest() {
-  let materialNo = "TAC00057540";
+  let materialNo = "TAC11165390";
   let getFiles = new ReadAndWrite(
     "./data/hkor_4.xlsx",
     "./data/bdor_4.xlsx",
@@ -30,11 +30,14 @@ function doubleCheckTest() {
   let { hk, bd } = markBefores(getHK, getBD, materialNo);
   let getAfters = markAfters(hk, bd, materialNo);
   // console.log(getAfters.hk);
-  // getFiles.createFile(getAfters.hk, "./data/sample_4.xlsx");
+  getFiles.createFile(getAfters.hk, "./data/sample_4.xlsx");
   let testOutput = runTest(getOutput, getAfters.hk, true);
-
+  // let filteredOutput = _.filter(getOutput, { materialNo: materialNo });
+  // let filteredHK = _.filter(getHK, { materialNo: materialNo });
+  // let filteredBD = _.filter(getBD, { materialNo: materialNo });
   // below is for refreshing data, no need to run right now
   // let getPath = `./testData/sept23`;
+  // writeData(getPath, materialNo, filteredHK, filteredBD, filteredOutput);
   // refreshData(getPath, getFiles, testOutput);
 }
 doubleCheckTest();

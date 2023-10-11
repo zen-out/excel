@@ -152,11 +152,6 @@ function getBeforeQty(hk, currHK, bd, bdActualBeforeQty, test) {
       hk = getDuplicates.hk;
       bd = getDuplicates.bd;
       hk = markHKAdded(hk, result, true, getOutput.calculatedBeforeQty);
-      // console.log("here");
-
-      console.log("here");
-      console.log(filteredBDBefore.length, filteredBDAfter.length);
-      console.log("hk qty", currHKQty, "bd before sum", bdBeforeSum);
     } else {
       if (filteredBDBefore.length) {
         hk = markHKAdded(hk, currHK, true);
